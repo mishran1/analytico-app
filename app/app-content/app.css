@@ -1,0 +1,16 @@
+﻿/* BODY */
+
+body {
+    padding: 20px 0;
+}
+
+/* NAVIGATION */
+
+.nav {
+	float: right;
+}
+
+.flash-message {
+    margin-top: 20px;
+}
+
