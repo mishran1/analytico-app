@@ -4,7 +4,7 @@
     "description": "Analytico Application",
     "repository": {
         "type": "git",
-        "url": "https://github.com/mishran1/analytico.git"
+        "url": "https://github.com/mishran1/analytico-app.git"
     },
     "dependencies": {
         "bcryptjs": "^2.1.0",
