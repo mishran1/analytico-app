@@ -1,5 +1,4 @@
-# mean-stack-registration-login-example
+Analytico
+-- by MaisonMRKT
 
-MEAN Stack User Registration and Login Example Application
-
-To see a demo and further details go to http://jasonwatmore.com/post/2015/12/09/MEAN-Stack-User-Registration-and-Login-Example.aspx
+This app will stream GA data belonging to e-commerce managers and other clients. Data will be authorized via OAuth2 and visualized via a variety of charting libraries.
