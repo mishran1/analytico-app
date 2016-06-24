@@ -28,20 +28,20 @@
             .state('analytics', {
                 url: '/analytics',
                 templateUrl: 'analytics/index.html',
-                controller: 'analytics.IndexController',
+                controller: 'Analytics.IndexController',
                 controllerAs: 'vm',
                 data: { activeTab: 'analytics' }
             })
             .state('about', {
                 url: '/about',
                 templateUrl: 'about/index.html',
-                controller: 'about.IndexController',
+                controller: 'About.IndexController',
                 controllerAs: 'vm',
                 data: { activeTab: 'about' }
             })
             .state('logout', {
                 url: '/logout',
-                templateUrl: '',
+                templateUrl: '', // Must include templateUrl, even if blank
                 controller: 'logout.LogoutController',
                 controllerAs: 'vm',
                 data: { activeTab: 'logout' }

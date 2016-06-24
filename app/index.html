@@ -19,7 +19,7 @@
                     <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
                     <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
                     <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
-                    <li ng-class="{active: activeTab === 'logout'}"><a ui-sref="logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
         </nav>
         <div class="flash-message" ng-if="flash">
@@ -36,6 +36,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
 
     <!-- application scripts -->
     <script src="app.js"></script>
@@ -43,8 +44,8 @@
     <script src="app-services/flash.service.js"></script>
     <script src="home/index.controller.js"></script>
     <script src="account/index.controller.js"></script>
+    <script src="analytics/index.controller.js"></script>
+    <script src="about/index.controller.js"></script>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
 </body>
 </html>
