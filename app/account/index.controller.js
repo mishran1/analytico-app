@@ -5,12 +5,15 @@
         .module('app')
         .controller('Account.IndexController', Controller);
 
-    function Controller($window, UserService, FlashService) {
+    function Controller($window, UserService, FlashService, $rootScope) {
         var vm = this;
 
         vm.user = null;
         vm.saveUser = saveUser;
         vm.deleteUser = deleteUser;
+
+        // For loading Google Analytics
+        $rootScope.flag = '1';
 
         initController();
 

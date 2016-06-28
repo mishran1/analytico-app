@@ -1,2 +1,15 @@
-﻿<hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
+﻿<section id="auth-button"></section>
+<section id="view-selector"></section>
+<section id="timeline"></section>
+<hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
 <hc-pie-chart title="Browser usage" data="pieData">Placeholder for pie chart</hc-pie-chart>
+<!-- Loading the Library -->
+<script>
+  (function(w,d,s,g,js,fjs){
+    g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(cb){this.q.push(cb)}};
+    js=d.createElement(s);fjs=d.getElementsByTagName(s)[0];
+    js.src='https://apis.google.com/js/platform.js';
+    fjs.parentNode.insertBefore(js,fjs);js.onload=function(){g.load('analytics')};
+  }(window,document,'script'));
+</script>
+<script src="analytics/renderchart.js"></script>

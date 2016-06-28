@@ -57,7 +57,13 @@
             };
         })
 
-    function Controller($scope) {
+    function Controller($scope, $rootScope, $window) {
+        // For loading Google Analytics
+        $window.location.href = '/app/#/analytics';
+        if($rootScope.flag == '1'){
+            $rootScope.flag = '0';
+            $window.location.reload();
+        }
         // Sample options for first chart
         $scope.chartOptions = {
             title: {
