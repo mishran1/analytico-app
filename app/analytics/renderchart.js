@@ -69,6 +69,7 @@
       renderYearOverYearChart(data.ids);
       renderTopBrowsersChart(data.ids);
       renderTopCountriesChart(data.ids);
+      renderTopProductsChart(data.ids);
     });
 
 
@@ -265,6 +266,27 @@
       });
     }
 
+    function renderTopProductsChart(ids) {
+      query({
+        'ids': ids,
+        'dimensions': 'ga:country',
+        'metrics': 'ga:sessions',
+        'sort': '-ga:sessions',
+        'max-results': 5
+      })
+      .then(function(response) {
+
+        //console.log(response.rows[0][1]);
+
+        var products = response.rows;
+
+        accessProducts(products);
+      });
+    }
+    var prods = 
+    function accessProducts(prods) {
+      return prods;
+    }
 
     /**
      * Extend the Embed APIs `gapi.analytics.report.Data` component to
