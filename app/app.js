@@ -26,11 +26,25 @@
                 data: { activeTab: 'account' }
             })
             .state('analytics', {
-                url: '/analytics',
-                templateUrl: 'analytics/index.html',
-                controller: 'Analytics.IndexController',
+                url: '/analytics/ga-analytics',
+                templateUrl: 'analytics/ga-analytics/index.html',
+                controller: 'GoogleAnalytics.IndexController',
                 controllerAs: 'vm',
-                data: { activeTab: 'analytics' }
+                data: { activeTab: 'ga-analytics' }
+            })
+            .state('ga-analytics', {
+                url: '/analytics/ga-analytics',
+                templateUrl: 'analytics/ga-analytics/index.html',
+                controller: 'GoogleAnalytics.IndexController',
+                controllerAs: 'vm',
+                data: { activeTab: 'ga-analytics' }
+            })
+            .state('mc-analytics', {
+                url: '/analytics/mc-analytics',
+                templateUrl: 'analytics/mc-analytics/index.html',
+                controller: 'MailChimp.IndexController',
+                controllerAs: 'vm',
+                data: { activeTab: 'mc-analytics' }
             })
             .state('about', {
                 url: '/about',

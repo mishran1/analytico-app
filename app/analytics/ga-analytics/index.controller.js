@@ -3,16 +3,15 @@
 
     angular
         .module('app')
-        .controller('Analytics.IndexController', Controller)
+        .controller('GoogleAnalytics.IndexController', Controller)
 
     function Controller($scope, $rootScope, $window) {
-        // For loading Google Analytics
-        $window.location.href = '/app/#/analytics';
+        /*// For loading Google Analytics
+        $window.location.href = '/app/#/analytics/ga-analytics';
         if ($rootScope.flag == '1') {
             $rootScope.flag = '0';
             $window.location.reload();
-        }
-
+        }*/
         gapi.analytics.ready(function() {
 
         /**

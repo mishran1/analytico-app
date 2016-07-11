@@ -14,3 +14,18 @@ body {
     margin-top: 20px;
 }
 
+.sub-menu {
+  position: absolute;
+  display: none;
+  background-color: lightgreen;
+  padding: 5px;
+}
+
+.sub-menu > li {
+  display: block;
+  cursor: pointer;
+}
+
+li:hover .sub-menu {
+  display: block;
+}

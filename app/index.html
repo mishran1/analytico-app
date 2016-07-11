@@ -11,16 +11,21 @@
 <body class="container">
     <!-- header -->
         <nav class="navbar navbar-default">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">Analytico</a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home"><i class="fa fa-home"></i> Home</a></li>
-                    <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
-                    <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
-                    <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
-                    <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
-                </ul>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Analytico</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home"><i class="fa fa-home"></i> Home</a></li>
+                <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
+                <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a>
+                    <ul class="sub-menu">
+                        <li ng-class="{active: activeTab === 'ga-analytics'}"><a ui-sref="ga-analytics">Google Analytics</li></a>
+                        <li ng-class="{active: activeTab === 'mc-analytics'}"><a ui-sref="mc-analytics">MailChimp</li></a>
+                    </ul>
+                </li>
+                <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
+                <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
+            </ul>
         </nav>
         <div class="flash-message" ng-if="flash">
             <div class="{{'alert alert-' + flash.type}}" ng-bind="flash.message"></div>
@@ -44,7 +49,8 @@
     <script src="app-services/flash.service.js"></script>
     <script src="home/index.controller.js"></script>
     <script src="account/index.controller.js"></script>
-    <script src="analytics/index.controller.js"></script>
+    <script src="analytics/ga-analytics/index.controller.js"></script>
+    <script src="analytics/mc-analytics/index.controller.js"></script>
     <script src="about/index.controller.js"></script>
 
 </body>
