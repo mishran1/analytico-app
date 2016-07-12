@@ -26,6 +26,54 @@
 
 
         /**
+         * Query params representing the date range.
+         */
+        var dateRange = {
+          'start-date': '14daysAgo',
+          'end-date': 'yesterday'
+        };
+
+        /**
+         * Create a new DateRangeSelector instance to be rendered inside of an
+         * element with the id "date-range-selector-container", set its date range
+         * and then render it to the page.
+         */
+        var dateRangeSelector = new gapi.analytics.ext.DateRangeSelector({
+          container: 'date-range-selector-container',
+          template:
+                    '<div class="DateRangeSelector">' +
+                    '  <div class="DateRangeSelector-item">' +
+                    '    <label>Start Date</label> ' +
+                    '    <input type="date">' +
+                    '    <label>End Date</label> ' +
+                    '    <input type="date">' +
+                    '  </div>' +
+                    '</div>'
+        })
+        .set(dateRange)
+        .execute();
+
+        /**
+         * Register a handler to run whenever the user changes the date range from
+         * the first datepicker. The handler will update the dataChart
+         * instance as well as change the dashboard subtitle to reflect the range.
+         */
+        dateRangeSelector.on('change', function(data) {
+          
+          // Update the "from" dates text.
+          /*var datefield = document.getElementById('from-dates');
+          datefield.innerHTML = data['start-date'] + '&mdash;' + data['end-date'];*/
+
+          dateRange = data;
+          var e = document.getElementById("selectedid");
+          var gaid = 'ga:' + e.options[e.selectedIndex].value;
+          
+          renderTopBrowsersChart(gaid);
+          renderTopCountriesChart(gaid);
+          renderTopProductsChart(gaid);
+        });
+
+        /**
          * Create a new ActiveUsers instance to be rendered inside of an
          * element with the id "active-users-container" and poll for changes every
          * five seconds.
@@ -60,9 +108,21 @@
         /**
          * Create a new ViewSelector2 instance to be rendered inside of an
          * element with the id "view-selector-container".
+         * Pass the template for the view selector with an id for the form
          */
         var viewSelector = new gapi.analytics.ext.ViewSelector2({
           container: 'view-selector-container',
+          template:
+                    '<div class="ViewSelector2">' +
+                    '  <div class="ViewSelector2-item">' +
+                    '    <label>Account</label>' +
+                    '    <select class="FormField"></select>' +
+                    '    <label>Property</label>' +
+                    '    <select class="FormField"></select>' +
+                    '    <label>View</label>' +
+                    '    <select class="FormField" id="selectedid"></select>' +
+                    '  </div>' +
+                    '</div>'
         })
         .execute();
 
@@ -232,6 +292,8 @@
             'dimensions': 'ga:browser',
             'metrics': 'ga:pageviews',
             'sort': '-ga:pageviews',
+            'start-date': dateRange['start-date'],
+            'end-date': dateRange['end-date'],
             'max-results': 5
           })
           .then(function(response) {
@@ -260,6 +322,8 @@
             'dimensions': 'ga:country',
             'metrics': 'ga:sessions',
             'sort': '-ga:sessions',
+            'start-date': dateRange['start-date'],
+            'end-date': dateRange['end-date'],
             'max-results': 5
           })
           .then(function(response) {
@@ -290,6 +354,8 @@
             'dimensions': 'ga:productName' ,
             'metrics': 'ga:itemQuantity,ga:revenuePerItem,ga:itemRevenue',
             'sort' : '-ga:itemRevenue',
+            'start-date': dateRange['start-date'],
+            'end-date': dateRange['end-date'],
             'max-results': 10
           })
           .then(function(response) {
