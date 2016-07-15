@@ -9,6 +9,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 <!-- Include the ViewSelector2 component script. -->
 <script src="analytics/public/javascript/embed-api/components/view-selector2.js"></script>
 
@@ -27,25 +29,36 @@
 	<div id="view-name"></div>
 	<div id="active-users-container"></div>
 </header>
-<div class="Chartjs">
-	<h3>This Week vs Last Week (by sessions)</h3>
-	<figure class="Chartjs-figure" id="chart-1-container"></figure>
-	<ol class="Chartjs-legend" id="legend-1-container"></ol>
+<div class="row">
+	<div class="col-md-6">
+		<div class="Chartjs">
+			<h3>This Week vs Last Week (by sessions)</h3>
+			<figure class="Chartjs-figure" id="chart-1-container"></figure>
+			<ol class="Chartjs-legend" id="legend-1-container"></ol>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="Chartjs">
+			<h3>This Year vs Last Year (by users)</h3>
+			<figure class="Chartjs-figure" id="chart-2-container"></figure>
+			<ol class="Chartjs-legend" id="legend-2-container"></ol>
+		</div>
+	</div>
 </div>
-<div class="Chartjs">
-	<h3>This Year vs Last Year (by users)</h3>
-	<figure class="Chartjs-figure" id="chart-2-container"></figure>
-	<ol class="Chartjs-legend" id="legend-2-container"></ol>
+<div class="row">
+	<div class="col-md-6">
+		<div class="Chartjs">
+			<h3>Top Browsers (by pageview)</h3>
+			<figure class="Chartjs-figure" id="chart-3-container"></figure>
+			<ol class="Chartjs-legend" id="legend-3-container"></ol>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="Chartjs">
+			<h3>Top Countries (by sessions)</h3>
+			<figure class="Chartjs-figure" id="chart-4-container"></figure>
+			<ol class="Chartjs-legend" id="legend-4-container"></ol>
+		</div>
+	</div>
 </div>
-<div class="Chartjs">
-	<h3>Top Browsers (by pageview)</h3>
-	<figure class="Chartjs-figure" id="chart-3-container"></figure>
-	<ol class="Chartjs-legend" id="legend-3-container"></ol>
-</div>
-<div class="Chartjs">
-	<h3>Top Countries (by sessions)</h3>
-	<figure class="Chartjs-figure" id="chart-4-container"></figure>
-	<ol class="Chartjs-legend" id="legend-4-container"></ol>
-</div>
-<div id="chart-top-products" ng-app="app">
-</div>
+<div id="chart-top-products" ng-app="app"></div>
