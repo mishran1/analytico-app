@@ -16,13 +16,9 @@
         initController($rootScope);
 
         function initController($rootScope) {
-            if (!($rootScope.mailchimp)) {
-                UserService.GetCurrent().then(function (user) {
-                    UserService.GetMC().then(function(data) {
-                        $rootScope.mailchimp = data;
-                    })
-                });
-            }
+            UserService.GetCurrent().then(function (user) {
+                vm.user = user;
+            });
         }
     }
 

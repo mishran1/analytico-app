@@ -27,36 +27,44 @@ function getMC(req, res) {
                 
                 //Promise to retrieve list ids from the API object
                 var get_ids = new Promise(function(resolve, reject) {
-                    var data = mailchimp.request({
-                        method : 'get',
-                        path : 'lists'
-                    }, function (err,result) {
-                        if (err) {
-                            reject(err);
-                        }
-                        
-                        for (var i = 0; i < result.lists.length; i++) {
-                            map[result.lists[i].id] = result.lists[i].name;
-                        }
-                    })
+                    var data = new Promise(function(resolve, reject) {
+                            mailchimp.request({
+                            method : 'get',
+                            path : 'lists'
+                        }, function (err,result) {
+                            if (err) {
+                                reject(err);
+                            }
+                            
+                            for (var i = 0; i < result.lists.length; i++) {
+                                map[result.lists[i].id] = result.lists[i].name;
+                            }
+                            resolve(map);
+                        })
+                    });
 
-                    var data1 = mailchimp.request({
-                        method : 'get',
-                        path : 'reports'
-                    }, function (err,result) {
-                        if (err) {
-                            reject(err);
-                        }
+                    var data1 = new Promise(function(resolve, reject) {
+                            mailchimp.request({
+                            method : 'get',
+                            path : 'reports'
+                        }, function (err,result) {
+                            if (err) {
+                                reject(err);
+                            }
 
-                        for (var i = 0; i < result.reports.length; i++) {
-                            rid.push({
-                                id: result.reports[i].id,
-                                title: result.reports[i].campaign_title
-                            });
-                        }
-                    })
+                            for (var i = 0; i < result.reports.length; i++) {
+                                rid.push({
+                                    id: result.reports[i].id,
+                                    title: result.reports[i].campaign_title
+                                });
+                            }
+                            resolve(rid);
+                        })
+                    });
 
-                    setTimeout(function(){ resolve({ lists: map, reports: rid }) }, 2000);
+                    Promise.all([data, data1]).then(function(results) {
+                        resolve(results);
+                    });
                 })
 
 
@@ -64,7 +72,7 @@ function getMC(req, res) {
                     //Loop through list ids and retrieve growth history for each
                     var hist_req = [];
                     var act_req = [];
-                    for (var i in result.lists) {
+                    for (var i in result[0]) {
                         hist_req.push({
                             method : 'get',
                             path : '/lists/{list_id}/growth-history',
@@ -72,22 +80,24 @@ function getMC(req, res) {
                                 list_id : i
                                 }
                             });
-
-/*                        act_req.push({
-                            method: 'get',
-                            path: 'lists/{list_id}/activity',
-                            path_params : {
-                                list_id : i
-                            }
-                        });*/
                     }
 
-                    for (var j = 0; j < result.reports.length; j++) {
+                    result[1].forEach(function (row, i){
                         hist_req.push({
                             method: 'get',
                             path: '/reports/{report_id}/',
                             path_params : {
-                                report_id : result.reports[j].id
+                                report_id : row.id
+                            }
+                        });
+                    });
+
+                    for (var i in result[0]) {
+                        hist_req.push({
+                            method : 'get',
+                            path : '/lists/{list_id}/activity',
+                            path_params : {
+                                list_id : i
                             }
                         });
                     }
@@ -105,6 +115,8 @@ function getMC(req, res) {
                         var top = [];
                         var down = [];
                         var campaign = [];
+                        var top1 = [];
+                        var down1 = [];
                         result.forEach(function (row, i) {
                             if (("history" in row)) {                                
                                 var subs = 0; //Variable for total Subscriptions
@@ -117,12 +129,13 @@ function getMC(req, res) {
                                         name: map[row.list_id],
                                         y: subs,
                                         drilldown: map[row.list_id]
-                                    })
+                                    });
+
                                 down.push({
                                     id: map[row.list_id],
                                     name: map[row.list_id],
                                     data: monthly
-                                })
+                                });
                             }
                             else if ("campaign_title" in row) {
                                 var open_rate = 0;
@@ -133,35 +146,37 @@ function getMC(req, res) {
                                     open_rate : row.opens.open_rate * 100,
                                     click_rate : row.clicks.click_rate * 100
                                 });
-                                
+                            }
+                            else if ("activity" in row){
+                                var net = 0;
+                                var day = [];
+                                row.activity.forEach(function (row, k) {
+                                    net = net + row.subs - row.unsubs;
+                                    day.push([row.day, row.subs - row.unsubs])
+                                });
+                                top1.push({
+                                        name: map[row.list_id],
+                                        y: net,
+                                        drilldown: map[row.list_id]
+                                    });
+                                day.reverse();
+                                down1.push({
+                                    id: map[row.list_id],
+                                    name: map[row.list_id],
+                                    data: day
+                                });
                             }
                         });
                         MCdata.push({ obj1: top});
                         MCdata.push({ obj2: down});
                         MCdata.push({ obj3: campaign});
+                        MCdata.push({ obj4: top1});
+                        MCdata.push({ obj5: down1});
 
                         res.send(MCdata);
                     }, function(err) {
                         console.log(err);
                     });
-
-/*                    var get_activity = new Promise(function(resolve, reject) {
-                        var data = mailchimp.batch(act_req, function (err, result) {
-                            if (err) {
-                                reject(err);
-                            }
-                            resolve(result)
-                        })
-                    })
-
-                    get_activity.then(function(result) {
-                        res.send(result);
-                    }, function(err) {
-                        console.log(err);
-                    });
-*/
-
-
                 }, function(err) {
                     console.log(err);
                 });

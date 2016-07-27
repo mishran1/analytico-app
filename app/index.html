@@ -17,12 +17,7 @@
             <ul class="nav navbar-nav">
                 <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home"><i class="fa fa-home"></i> Home</a></li>
                 <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
-                <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a>
-                    <ul class="sub-menu">
-                        <li ng-class="{active: activeTab === 'ga-analytics'}"><a ui-sref="ga-analytics">Google Analytics</li></a>
-                        <li ng-class="{active: activeTab === 'mc-analytics'}"><a ui-sref="mc-analytics">MailChimp</li></a>
-                    </ul>
-                </li>
+                <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
                 <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
                 <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
             </ul>
@@ -42,6 +37,10 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
 
     <!-- application scripts -->
     <script src="app.js"></script>
@@ -49,8 +48,7 @@
     <script src="app-services/flash.service.js"></script>
     <script src="home/index.controller.js"></script>
     <script src="account/index.controller.js"></script>
-    <script src="analytics/ga-analytics/index.controller.js"></script>
-    <script src="analytics/mc-analytics/index.controller.js"></script>
+    <script src="analytics/index.controller.js"></script>
     <script src="about/index.controller.js"></script>
 
 </body>
