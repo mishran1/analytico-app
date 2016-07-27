@@ -13,13 +13,16 @@
         // For loading Google Analytics
         $rootScope.flag = '1';
 
-        initController();
+        initController($rootScope);
 
-        function initController() {
-            // get current user
-            UserService.GetCurrent().then(function (user) {
-                vm.user = user;
-            });
+        function initController($rootScope) {
+            if (!($rootScope.mailchimp)) {
+                UserService.GetCurrent().then(function (user) {
+                    UserService.GetMC().then(function(data) {
+                        $rootScope.mailchimp = data;
+                    })
+                });
+            }
         }
     }
 
