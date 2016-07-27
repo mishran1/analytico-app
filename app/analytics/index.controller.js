@@ -13,6 +13,7 @@
             $window.location.reload();
         }
         else {
+            var data = $rootScope.mailchimp;
             var vm = this;
             vm.user = null;
 
@@ -576,9 +577,7 @@
 
             });
         
-          UserService.GetCurrent().then(function (user) {
-            UserService.GetMC().then(function(data) {
-              console.log(data);
+              console.log($rootScope.mailchimp);
 
               Highcharts.chart('mc-container-1', {
 
@@ -752,9 +751,6 @@
                       series: data[4].obj5
                   }
               });
-
-            })
-          });
         }
     }
 
