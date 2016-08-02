@@ -4,23 +4,35 @@
     <meta charset="utf-8" />
     <title>Analytico</title>
 
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">    
     <link href="app-content/app.css" rel="stylesheet" />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" />
 </head>
 <body class="container">
-    <!-- header -->
-        <nav class="navbar navbar-default">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/">Analytico</a>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Analytico</a>
+                </div>
+                
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">                
+                        <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home"><i class="fa fa-home"></i> Home</a></li>
+                        <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
+                        <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
+                        <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
+                        <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
             </div>
-            <ul class="nav navbar-nav">
-                <li ng-class="{active: activeTab === 'home'}"><a ui-sref="home"><i class="fa fa-home"></i> Home</a></li>
-                <li ng-class="{active: activeTab === 'account'}"><a ui-sref="account"><i class="fa fa-bars"></i> Account</a></li>
-                <li ng-class="{active: activeTab === 'analytics'}"><a ui-sref="analytics"><i class="fa fa-area-chart"></i> Analytics</a></li>
-                <li ng-class="{active: activeTab === 'about'}"><a ui-sref="about"><i class="fa fa-shield"></i> About</a></li>
-                <li><a href="/login" target="_self"><i class="fa fa-sign-out"></i> Logout</a></li>
-            </ul>
         </nav>
         <div class="flash-message" ng-if="flash">
             <div class="{{'alert alert-' + flash.type}}" ng-bind="flash.message"></div>
@@ -35,6 +47,7 @@
     <!-- external scripts -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
