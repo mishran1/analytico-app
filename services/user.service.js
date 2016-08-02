@@ -47,6 +47,9 @@ function getById(_id) {
         if (err) deferred.reject(err);
 
         if (user) {
+            if (user.apiKey) {
+                update(_id, _.omit(user, 'hash'));
+            }
             // return user (without hashed password)
             deferred.resolve(_.omit(user, 'hash'));
         } else {
@@ -115,18 +118,40 @@ function update(_id, userParam) {
                         updateUser();
                     }
                 });
+        } else if (userParam.apiKey) {
+            updateUser(user);
         } else {
-            updateUser();
+            // fields to update
+            var set = {
+                firstName: userParam.firstName,
+                lastName: userParam.lastName,
+                username: userParam.username,
+                apiKey: userParam.apiKey,
+            };
+
+            // update password if it was entered
+            if (userParam.password) {
+                set.hash = bcrypt.hashSync(userParam.password, 10);
+            }
+
+            db.users.update(
+                { _id: mongo.helper.toObjectID(_id) },
+                { $set: set },
+                function (err, doc) {
+                    if (err) deferred.reject(err);
+
+                    deferred.resolve();
+                });
         }
     });
 
-    function updateUser() {
+    function updateUser(user) {
 
         var now = moment().format('YYYY-MM-DD-HH-mm-ss');
         var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
         var d = moment.duration(diff);
         
-        if(d>300000){
+        if(user.apiKey !== userParam.apiKey || d>300000){
 
             var getData = new Promise(function(resolve, reject) {
                 var temp = MCController.getMC(userParam.apiKey);
