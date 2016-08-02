@@ -4,8 +4,13 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var Q = require('q');
 var mongo = require('mongoskin');
+var Mailchimp = require('mailchimp-api-v3');
+var moment = require('moment');
 var db = mongo.db(config.connectionString, { native_parser: true });
 db.bind('users');
+
+// Calling the specific MailChimp controller logic
+var MCController = require('controllers/api/MC.controller');
 
 var service = {};
 
@@ -116,27 +121,52 @@ function update(_id, userParam) {
     });
 
     function updateUser() {
-        // fields to update
-        var set = {
-            firstName: userParam.firstName,
-            lastName: userParam.lastName,
-            username: userParam.username,
-            apiKey: userParam.apiKey,
-        };
 
-        // update password if it was entered
-        if (userParam.password) {
-            set.hash = bcrypt.hashSync(userParam.password, 10);
-        }
+        var now = moment().format('YYYY-MM-DD-HH-mm-ss');
+        var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
+        var d = moment.duration(diff);
+        
+        if(d>300000){
 
-        db.users.update(
-            { _id: mongo.helper.toObjectID(_id) },
-            { $set: set },
-            function (err, doc) {
-                if (err) deferred.reject(err);
-
-                deferred.resolve();
+            var getData = new Promise(function(resolve, reject) {
+                var temp = MCController.getMC(userParam.apiKey);
+                resolve(temp);
             });
+
+            getData.then(function(result) {
+                
+                // fields to update
+                var set = {
+                    firstName: userParam.firstName,
+                    lastName: userParam.lastName,
+                    username: userParam.username,
+                    apiKey: userParam.apiKey,
+                    dataMC: result,
+                    modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
+                };
+
+                // update password if it was entered
+                if (userParam.password) {
+                    set.hash = bcrypt.hashSync(userParam.password, 10);
+                }
+
+                db.users.update(
+                { _id: mongo.helper.toObjectID(_id) },
+                { $set: set },
+                function (err, doc) {
+                    if (err) deferred.reject(err);
+
+                    deferred.resolve();
+                });
+
+            }, function(err) {
+                console.log(err);
+            });
+
+        }
+        else{
+            console.log('too recent too update');
+        }
     }
 
     return deferred.promise;
