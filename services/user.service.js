@@ -102,6 +102,8 @@ function update(_id, userParam) {
 
     // validation
     db.users.findById(_id, function (err, user) {
+        var currentUser = user;
+
         if (err) deferred.reject(err);
 
         if (user.username !== userParam.username) {
@@ -115,11 +117,56 @@ function update(_id, userParam) {
                         // username already exists
                         deferred.reject('Username "' + req.body.username + '" is already taken')
                     } else {
-                        updateUser();
+                        // fields to update
+                        var set = {
+                            firstName: userParam.firstName,
+                            lastName: userParam.lastName,
+                            username: userParam.username,
+                            apiKey: userParam.apiKey,
+                        };
+
+                        // update password if it was entered
+                        if (userParam.password) {
+                            set.hash = bcrypt.hashSync(userParam.password, 10);
+                        }
+
+                        updateUser(set);
                     }
                 });
         } else if (userParam.apiKey) {
-            updateUser(user);
+
+            var now = moment().format('YYYY-MM-DD-HH-mm-ss');
+            var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
+            var d = moment.duration(diff);
+
+            if (user.apiKey !== userParam.apiKey || d>300000) {          
+                var getData = new Promise(function(resolve, reject) {
+                    var temp = MCController.getMC(userParam.apiKey);
+                    resolve(temp);
+                });
+
+                getData.then(function(result) {
+
+                    // fields to update
+                    var set = {
+                        firstName: userParam.firstName,
+                        lastName: userParam.lastName,
+                        username: userParam.username,
+                        apiKey: userParam.apiKey,
+                        dataMC: result,
+                        modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
+                    };
+
+                    // update password if it was entered
+                    if (userParam.password) {
+                        set.hash = bcrypt.hashSync(userParam.password, 10);
+                    }
+
+                    updateUser(set);
+                },  function(err) {
+                        console.log(err);
+                    });
+            }
         } else {
             // fields to update
             var set = {
@@ -134,66 +181,20 @@ function update(_id, userParam) {
                 set.hash = bcrypt.hashSync(userParam.password, 10);
             }
 
-            db.users.update(
-                { _id: mongo.helper.toObjectID(_id) },
-                { $set: set },
-                function (err, doc) {
-                    if (err) deferred.reject(err);
-
-                    deferred.resolve();
-                });
+            updateUser(set);
         }
     });
 
-    function updateUser(user) {
+    function updateUser(set) {
+        db.users.update(
+        { _id: mongo.helper.toObjectID(_id) },
+        { $set: set },
+        function (err, doc) {
+            if (err) deferred.reject(err);
 
-        var now = moment().format('YYYY-MM-DD-HH-mm-ss');
-        var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
-        var d = moment.duration(diff);
-        
-        if(user.apiKey !== userParam.apiKey || d>300000){
-
-            var getData = new Promise(function(resolve, reject) {
-                var temp = MCController.getMC(userParam.apiKey);
-                resolve(temp);
-            });
-
-            getData.then(function(result) {
-                
-                // fields to update
-                var set = {
-                    firstName: userParam.firstName,
-                    lastName: userParam.lastName,
-                    username: userParam.username,
-                    apiKey: userParam.apiKey,
-                    dataMC: result,
-                    modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
-                };
-
-                // update password if it was entered
-                if (userParam.password) {
-                    set.hash = bcrypt.hashSync(userParam.password, 10);
-                }
-
-                db.users.update(
-                { _id: mongo.helper.toObjectID(_id) },
-                { $set: set },
-                function (err, doc) {
-                    if (err) deferred.reject(err);
-
-                    deferred.resolve();
-                });
-
-            }, function(err) {
-                console.log(err);
-            });
-
-        }
-        else{
-            console.log('too recent too update');
-        }
+            deferred.resolve();
+        });
     }
-
     return deferred.promise;
 }
 
