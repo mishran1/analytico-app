@@ -2,9 +2,6 @@
 	<a class="pull-right btn btn-primary" ng-click="addWidget()"><i class="glyphicon glyphicon-plus"></i> Add Widget</a>
 	<a class="pull-right btn btn-warning" ng-click="clear()"><i class="glyphicon glyphicon-trash"></i> Clear</a>
 	<h1 style="display: inline-block; width: 200px;">Dashboard</h1>
-	<select class="form-control" style="width: 150px; margin-bottom: 20px; display:inline-block;" ng-change="changeDashboard()" ng-model="selectedDashboardId" ng-options="d.id as d.name for d in dashboards | object2Array | orderBy:'id'">
-	</select>
-
 </div>
 <div gridster="gridsterOptions">
 	<ul>
