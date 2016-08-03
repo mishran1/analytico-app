@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router'])
+        .module('app', ['ui.router', 'gridster', 'ui.bootstrap'])
         .config(config)
         .run(run);
 
@@ -15,7 +15,6 @@
                 url: '/',
                 templateUrl: 'home/index.html',
                 controller: 'Home.IndexController',
-                controllerAs: 'vm',
                 data: { activeTab: 'home' }
             })
             .state('account', {
