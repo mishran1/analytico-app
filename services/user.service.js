@@ -9,6 +9,8 @@ var moment = require('moment');
 var db = mongo.db(config.connectionString, { native_parser: true });
 db.bind('users');
 
+var MCStatus = false;
+
 // Calling the specific MailChimp controller logic
 var MCController = require('controllers/api/MC.controller');
 
@@ -139,33 +141,43 @@ function update(_id, userParam) {
             var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
             var d = moment.duration(diff);
 
-            if (user.apiKey !== userParam.apiKey || d>300000) {          
-                var getData = new Promise(function(resolve, reject) {
-                    var temp = MCController.getMC(userParam.apiKey);
-                    resolve(temp);
-                });
-
-                getData.then(function(result) {
-
-                    // fields to update
-                    var set = {
-                        firstName: userParam.firstName,
-                        lastName: userParam.lastName,
-                        username: userParam.username,
-                        apiKey: userParam.apiKey,
-                        dataMC: result,
-                        modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
-                    };
-
-                    // update password if it was entered
-                    if (userParam.password) {
-                        set.hash = bcrypt.hashSync(userParam.password, 10);
-                    }
-
-                    updateUser(set);
-                },  function(err) {
-                        console.log(err);
+            if (user.apiKey !== userParam.apiKey || d>300000) {
+                if(!MCStatus || user.apiKey !== userParam.apiKey) {
+                    MCStatus = true;
+                    var getData = new Promise(function(resolve, reject) {
+                        var temp = MCController.getMC(userParam.apiKey);
+                        resolve(temp);
                     });
+
+                    getData.then(function(result) {
+
+                        // fields to update
+                        var set = {
+                            firstName: userParam.firstName,
+                            lastName: userParam.lastName,
+                            username: userParam.username,
+                            apiKey: userParam.apiKey,
+                            dataMC: result,
+                            modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
+                        };
+
+                        // update password if it was entered
+                        if (userParam.password) {
+                            set.hash = bcrypt.hashSync(userParam.password, 10);
+                        }
+
+                        updateUser(set);
+                        MCStatus = false;
+                    },  function(err) {
+                            console.log(err);
+                        });
+                }
+                else {
+                    console.log('im already running');
+                }
+            }
+            else {
+                console.log('Data up to date');
             }
         } else {
             // fields to update
