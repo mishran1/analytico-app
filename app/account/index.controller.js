@@ -14,6 +14,7 @@
 
         // For loading Google Analytics
         $rootScope.flag = '1';
+        $rootScope.flagH = '1';
 
         initController();
 
