@@ -196,6 +196,7 @@
             $window.location.reload();
         }
         else {
+            $rootScope.flagH = '1';
             initController();
             gapi.analytics.ready(function() {
 
