@@ -18,6 +18,8 @@
                     var click_rates = [];
                     var open_rates = [];
                     var chart0 = null;
+                    var chart1 = null;
+                    var chart2 = null;
                     var chart3 = null;
                     var chart4 = null;
                     var chart5 = null;
@@ -772,7 +774,7 @@
                           })
                         };
 
-                        var chart1 = function () {
+                        chart1 = function () {
                           Highcharts.chart('mc-container-1', {
                             title: {
                               text: 'Engagement Analysis'
@@ -805,7 +807,7 @@
                           });
                         }
 
-                        var chart2 = function () {
+                        chart2 = function () {
                             Highcharts.chart('mc-container-2', {
 
                                 chart: {
@@ -882,7 +884,7 @@
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[2].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[2].sizeX, [dashboard.widgets[2].sizeY]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
                             chart2();
@@ -890,7 +892,7 @@
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[3].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[3].sizeX, [dashboard.widgets[3].sizeY]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
                             chart3();
@@ -898,7 +900,7 @@
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[4].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[4].sizeX, [dashboard.widgets[4].sizeY]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
                             chart4();
@@ -906,7 +908,7 @@
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[5].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[5].sizeX, [dashboard.widgets[5].sizeY]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
                             chart5();
@@ -914,7 +916,7 @@
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[6].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[6].sizeX, [dashboard.widgets[6].sizeY]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
                             chart6();
