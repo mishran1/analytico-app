@@ -133,6 +133,10 @@
                     };
 
                     var gaData = new Promise(function(resolve, reject) {
+                      var gaChart1 = null;
+                      var gaChart2 = null;
+                      var gaChart3 = null;
+                      var gaChart4 = null;
                         gapi.analytics.ready(function() {
 
                           /**
@@ -305,58 +309,61 @@
                                 return moment(label, 'YYYYMMDD').format('ddd');
                               });
 
-                              chart3 = function () {
-                                  Highcharts.chart('mc-container-3', {
+                              gaChart1 = new Promise(function(resolve, reject) {
+                                  chart3 = function () {
+                                      Highcharts.chart('mc-container-3', {
 
-                                      chart: {
-                                          type: 'areaspline'
-                                      },
+                                          chart: {
+                                              type: 'areaspline'
+                                          },
 
-                                      title: {
-                                          text: ''
-                                      },
-
-                                      legend: {
-                                          layout: 'vertical',
-                                          align: 'left',
-                                          verticalAlign: 'top',
-                                          x: 150,
-                                          y: 100,
-                                          floating: true,
-                                          borderWidth: 1,
-                                          backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                                      },
-
-                                      xAxis: {
-                                          categories: labels
-                                      },
-
-                                      yAxis: {
                                           title: {
-                                              text: 'Users'
-                                          }
-                                      },
+                                              text: ''
+                                          },
 
-                                      tooltip: {
-                                          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                      },
+                                          legend: {
+                                              layout: 'vertical',
+                                              align: 'left',
+                                              verticalAlign: 'top',
+                                              x: 150,
+                                              y: 100,
+                                              floating: true,
+                                              borderWidth: 1,
+                                              backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                                          },
 
-                                      plotOptions: {
-                                          areaspline: {
-                                              fillOpacity: 0.5
-                                          }
-                                      },
+                                          xAxis: {
+                                              categories: labels
+                                          },
 
-                                      series: [{
-                                          name: 'Last Week',
-                                          data: data2
-                                      }, {
-                                          name: 'This Week',
-                                          data: data1
-                                      }]
+                                          yAxis: {
+                                              title: {
+                                                  text: 'Users'
+                                              }
+                                          },
 
-                                  });
-                              }
+                                          tooltip: {
+                                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                          },
+
+                                          plotOptions: {
+                                              areaspline: {
+                                                  fillOpacity: 0.5
+                                              }
+                                          },
+
+                                          series: [{
+                                              name: 'Last Week',
+                                              data: data2
+                                          }, {
+                                              name: 'This Week',
+                                              data: data1
+                                          }]
+
+                                      });
+                                  }
+                                  resolve();
+                                });
                             });
                           }
 
@@ -420,53 +427,56 @@
                                 ]
                               };
 
-                              chart4 = function () {
-                                Highcharts.chart('mc-container-4', {
+                              gaChart2 = new Promise(function(resolve, reject) {
+                                  chart4 = function () {
+                                    Highcharts.chart('mc-container-4', {
 
-                                  chart: {
-                                        type: 'column',
-                                        options3d: {
-                                            enabled: true,
-                                            alpha: 10,
-                                            beta: 25,
-                                            depth: 70
-                                        }
-                                    },
+                                      chart: {
+                                            type: 'column',
+                                            options3d: {
+                                                enabled: true,
+                                                alpha: 10,
+                                                beta: 25,
+                                                depth: 70
+                                            }
+                                        },
 
-                                  title: {
-                                        text: ''
-                                  },
-
-                                  plotOptions: {
-                                        column: {
-                                            depth: 15
-                                        }
-                                  },
-
-                                  xAxis: {
-                                    categories: Highcharts.getOptions().lang.shortMonths
-                                    },
-
-                                  yAxis: {
                                       title: {
-                                          text: 'Sessions'
-                                      }
-                                  },
+                                            text: ''
+                                      },
 
-                                  tooltip: {
-                                      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                  },
+                                      plotOptions: {
+                                            column: {
+                                                depth: 15
+                                            }
+                                      },
 
-                                  series: [{
-                                      name: 'Last Year',
-                                      data: data2
-                                  }, {
-                                      name: 'This Year',
-                                      data: data1
-                                  }]
+                                      xAxis: {
+                                        categories: Highcharts.getOptions().lang.shortMonths
+                                        },
 
-                              });
-                              }
+                                      yAxis: {
+                                          title: {
+                                              text: 'Sessions'
+                                          }
+                                      },
+
+                                      tooltip: {
+                                          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                      },
+
+                                      series: [{
+                                          name: 'Last Year',
+                                          data: data2
+                                      }, {
+                                          name: 'This Year',
+                                          data: data1
+                                      }]
+
+                                  });
+                                  }
+                                  resolve();
+                                });
                             })
                             .catch(function(err) {
                               console.error(err.stack);
@@ -511,46 +521,49 @@
                                   };
                               });
 
-                              chart5 = function () {
-                                  Highcharts.chart('mc-container-5', {
+                              gaChart3 = new Promise(function(resolve, reject) {
+                                  chart5 = function () {
+                                      Highcharts.chart('mc-container-5', {
 
-                                      chart: {
-                                        plotBackgroundColor: null,
-                                        plotBorderWidth: null,
-                                        plotShadow: false,
-                                        type: 'pie'
-                                      },
+                                          chart: {
+                                            plotBackgroundColor: null,
+                                            plotBorderWidth: null,
+                                            plotShadow: false,
+                                            type: 'pie'
+                                          },
 
-                                      title: {
-                                          text: ''
-                                      },
+                                          title: {
+                                              text: ''
+                                          },
 
-                                      tooltip: {
-                                          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                      },
+                                          tooltip: {
+                                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                          },
 
-                                      plotOptions: {
-                                          pie: {
-                                              allowPointSelect: true,
-                                              cursor: 'pointer',
-                                              dataLabels: {
-                                                  enabled: true,
-                                                  format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                                  style: {
-                                                      color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                                  },
-                                                  connectorColor: 'silver'
+                                          plotOptions: {
+                                              pie: {
+                                                  allowPointSelect: true,
+                                                  cursor: 'pointer',
+                                                  dataLabels: {
+                                                      enabled: true,
+                                                      format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                                      style: {
+                                                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                                      },
+                                                      connectorColor: 'silver'
+                                                  }
                                               }
-                                          }
-                                      },
+                                          },
 
-                                      series: [{
-                                          name: 'Browsers',
-                                          data: data
-                                      }]
+                                          series: [{
+                                              name: 'Browsers',
+                                              data: data
+                                          }]
 
-                                  });
-                              }
+                                      });
+                                  }
+                                  resolve();
+                                });
                             });
                           }
 
@@ -581,49 +594,52 @@
                                 });
                               });
 
-                              chart6 = function () {
-                                  Highcharts.chart('mc-container-6', {
+                              gaChart4 = new Promise(function(resolve, reject) {
+                                  chart6 = function () {
+                                      Highcharts.chart('mc-container-6', {
 
-                                      chart: {
-                                          type: 'pie',
-                                          options3d: {
-                                              enabled: true,
-                                              alpha: 45
-                                          }
-                                      },
-
-                                      title: {
-                                          text: ''
-                                      },
-
-                                      tooltip: {
-                                          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                      },
-
-                                      plotOptions: {
-                                          pie: {
-                                              innerSize: 100,
-                                              depth: 45,
-                                              allowPointSelect: true,
-                                              cursor: 'pointer',
-                                              dataLabels: {
+                                          chart: {
+                                              type: 'pie',
+                                              options3d: {
                                                   enabled: true,
-                                                  format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                                  style: {
-                                                      color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                                  },
-                                                  connectorColor: 'silver'
+                                                  alpha: 45
                                               }
-                                          }
-                                      },
+                                          },
 
-                                      series: [{
-                                          name: 'Sessions',
-                                          data: data
-                                      }]
+                                          title: {
+                                              text: ''
+                                          },
 
+                                          tooltip: {
+                                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                          },
+
+                                          plotOptions: {
+                                              pie: {
+                                                  innerSize: 100,
+                                                  depth: 45,
+                                                  allowPointSelect: true,
+                                                  cursor: 'pointer',
+                                                  dataLabels: {
+                                                      enabled: true,
+                                                      format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                                      style: {
+                                                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                                      },
+                                                      connectorColor: 'silver'
+                                                  }
+                                              }
+                                          },
+
+                                          series: [{
+                                              name: 'Sessions',
+                                              data: data
+                                          }]
+
+                                      });
+                                    }
+                                    resolve();
                                   });
-                                }
                             });
                           }
 
@@ -678,7 +694,10 @@
                             }).join('');
                           }
 
-                          resolve();
+                          Promise.all([gaChart1, gaChart2, gaChart3, gaChart4])
+                          .then(function(results) {
+                            resolve();
+                          });
 
 
                           // Set some global Chart.js defaults.
@@ -703,7 +722,7 @@
                                 chart4();
                                 chart5();
                                 chart6();
-                            }, 750);
+                            }, 500);
 
                             dataMC[2].obj3.forEach(function(row, i) {
                               click_rates.push(row.click_rate);
