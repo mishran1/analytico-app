@@ -15,8 +15,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    // authenticate using api to maintain clean separation between layers
-    request.post({
+/*    request.post({
         url: config.apiUrl + '/users/authenticate',
         form: req.body,
         json: true
@@ -35,7 +34,9 @@ router.post('/', function (req, res) {
         // redirect to returnUrl
         var returnUrl = req.query.returnUrl && decodeURIComponent(req.query.returnUrl) || '/';
         res.redirect(returnUrl);
-    });
+    }); */
+
+    document.write('hello');
 });
 
 module.exports = router;

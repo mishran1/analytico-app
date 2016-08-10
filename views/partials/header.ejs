@@ -53,6 +53,23 @@
           color: #5a5a5a;
         }
 
+        .footer {
+          position: absolute;
+          bottom: 0 !important;
+          width: 100%;
+          /* Set the fixed height of the footer here */
+          height: 60px;
+          background-color: #f5f5f5;
+        }
+
+        footer > .container .text-muted {
+          margin: 20px 0;
+        }
+
+        .footer > .container {
+          padding-right: 15px;
+          padding-left: 15px;
+        }
 
         /* CUSTOMIZE THE NAVBAR
         -------------------------------------------------- */
@@ -181,13 +198,54 @@
         /* CALCULATOR 
         -------------------------------------------------- */
 
-        h4 {
-          font-size: 300%;
+        h1, 
+        h3{
           text-align: center;
+        }
+
+        .margin-caption {
+          width: 100px;
+        }
+
+        .input-symbol > input {
+          padding-left: 30px;
+          font-size: 26px;
+          left: 50%;
+          float: none;
+          outline: none;
+          width: 125px;
+          height: 70px;
+          border-color: #ededed;
+          transition-property: border-color;
+          transition-duration: .2s;
+          transition-timing-function: linear;
+        }
+
+        .input-symbol > input:hover, 
+        .input-symbol > input:focus {
+          border-color: #00ac98;
+        }
+
+        .input-symbol {
+          position: relative;
+          text-align: center;
+          font-weight: 200;
+          display: block;
+          color: #7f8c8d;
+          font-size: 13px;
+        }
+
+        .input-symbol:before {
+          position: absolute;
+          padding-left: 2px;
+          content:"$";
+          font-size: 350%;
         }
 
         .calc-holder {
           padding-top: 100px;
+          margin: 0 auto;
+          float: none;
         }
 
         .price-box {
@@ -296,29 +354,45 @@
           opacity: 0.5;
         }
 
-        .price-slider {
-          margin-bottom: 70px;
+        .input-caption {
+          text-align: center;
+          font-weight: 200;
+          display: block;
+          color: #7f8c8d;
+          font-size: 16px;
         }
 
-        .price-slider span {
+        .output-caption {
+          text-align: center;
           font-weight: 200;
-          display: inline-block;
-          color: #7f8c8d;
-          font-size: 13px;
+          display: block;
+          color: white;
+          font-size: 16px;
+          padding-top: 56px;
+        }
+
+        #margin-result {
+          position: relative;
+          text-align: center;
+          font-weight: 200;
+          display: block;
+          color: white;
+          font-size: 34px;
         }
 
         .form-pricing {
+          height: 300px;
           background: #ffffff;
           padding: 20px;
           border-radius: 4px;
         }
 
         .price-form {
-          background: #ffffff;
+          background: #00ac98;
           margin-bottom: 10px;
           padding: 20px;
           border: 1px solid #eeeeee;
-          min-height: 516px;
+          height: 300px;
           border-radius: 4px;
           /*-moz-box-shadow:    0 5px 5px 0 #ccc;
             -webkit-box-shadow: 0 5px 5px 0 #ccc;
@@ -353,12 +427,6 @@
           font-size: 21px;
         }
 
-        img.payment {
-          display: block;
-            margin-left: auto;
-            margin-right: auto
-        }
-
         .ui-slider-range-min {
           background: #2980b9;
         }
@@ -376,25 +444,6 @@
             border-bottom: 1px dashed #ccc;
             background: #999;
         }
-
-        .footer {
-          position: absolute;
-          bottom: 0 !important;
-          width: 100%;
-          /* Set the fixed height of the footer here */
-          height: 60px;
-          background-color: #f5f5f5;
-        }
-
-        footer > .container .text-muted {
-          margin: 20px 0;
-        }
-
-        .footer > .container {
-          padding-right: 15px;
-          padding-left: 15px;
-        }
-
 
     </style>
 </head>
