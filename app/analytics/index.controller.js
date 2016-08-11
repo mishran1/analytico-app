@@ -485,8 +485,51 @@
                     ]
                   };
 
-                  new Chart(makeCanvas('chart-2-container')).Bar(data);
-                  generateLegend('legend-2-container', data.datasets);
+                  Highcharts.chart('container3', {
+
+                    chart: {
+                          type: 'column',
+                          options3d: {
+                              enabled: true,
+                              alpha: 10,
+                              beta: 25,
+                              depth: 70
+                          }
+                      },
+
+                    title: {
+                          text: ''
+                    },
+
+                    plotOptions: {
+                          column: {
+                              depth: 15
+                          }
+                    },
+
+                    xAxis: {
+                      categories: Highcharts.getOptions().lang.shortMonths
+                      },
+
+                    yAxis: {
+                        title: {
+                            text: 'Sessions'
+                        }
+                    },
+
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+
+                    series: [{
+                        name: 'Last Year',
+                        data: data2
+                    }, {
+                        name: 'This Year',
+                        data: data1
+                    }]
+
+                  });
                 })
                 .catch(function(err) {
                   console.error(err.stack);

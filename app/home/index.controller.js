@@ -6,6 +6,8 @@
 
         .controller('Home.IndexController', ['$scope', '$timeout', 'UserService', '$rootScope', '$window',
             function ($scope, $timeout, UserService, $rootScope, $window) {
+                var vm = this;
+                vm.user = null;
                 $window.location.href = '/app/#/';
                 if ($rootScope.flagH == '1') {
                     $rootScope.flagH = '0';
@@ -82,49 +84,49 @@
                                 row: 0,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 3,
+                                index: 0,
                                 name: "This Week vs Last Week"
                             }, {
                                 col: 2,
                                 row: 0,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 4,
+                                index: 1,
                                 name: "This Year vs Last Year"
                             }, {
                                 col: 0,
                                 row: 3,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 5,
+                                index: 2,
                                 name: "Top Browsers"
                             },{
                                 col: 2,
                                 row: 3,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 6,
+                                index: 3,
                                 name: "Top Countries"
                             },{
                                 col: 0,
                                 row: 5,
                                 sizeY: 2,
                                 sizeX: 2,
-                                index: 0,
+                                index: 4,
                                 name: "Mailing List Subscribers"
                             }, {
                                 col: 2,
                                 row: 7,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 1,
+                                index: 5,
                                 name: "Engagement Analysis"
                             }, {
                                 col: 6,
                                 row: 7,
                                 sizeY: 1,
                                 sizeX: 2,
-                                index: 2,
+                                index: 6,
                                 name: "Recent List Activity"
                             }]
                     };
@@ -132,6 +134,8 @@
                     $scope.clear = function() {
                         $scope.dashboard.widgets = [];
                     };
+
+                    
 
                     var gaData = new Promise(function(resolve, reject) {
 
@@ -307,8 +311,8 @@
                                     });
 
 
-                                    chart3 = function () {
-                                        Highcharts.chart('mc-container-3', {
+                                    chart0 = function () {
+                                        Highcharts.chart('mc-container-0', {
 
                                             chart: {
                                               type: 'areaspline'
@@ -427,8 +431,8 @@
                                     };
 
 
-                                    chart4 = function () {
-                                        Highcharts.chart('mc-container-4', {
+                                    chart1 = function () {
+                                        Highcharts.chart('mc-container-1', {
 
                                           chart: {
                                                 type: 'column',
@@ -524,8 +528,8 @@
                                     });
 
 
-                                    chart5 = function () {
-                                        Highcharts.chart('mc-container-5', {
+                                    chart2 = function () {
+                                        Highcharts.chart('mc-container-2', {
 
                                           chart: {
                                             plotBackgroundColor: null,
@@ -601,8 +605,8 @@
                                     });
 
 
-                                    chart6 = function () {
-                                        Highcharts.chart('mc-container-6', {
+                                    chart3 = function () {
+                                        Highcharts.chart('mc-container-3', {
 
                                           chart: {
                                               type: 'pie',
@@ -715,238 +719,308 @@
                     })
 
                     gaData.then(function(result){
-                        UserService.GetCurrent().then(function (user) {
-                            if (user.apiKey) {
-                                dataMC = user.dataMC;
-                                dataMC[2].obj3.forEach(function(row, i) {
-                                  click_rates.push(row.click_rate);
-                                  open_rates.push(row.open_rate);
-                                  names.push(row.title);
-                                });
-                                chart0 = function () {
-                                    Highcharts.chart('mc-container-0', {
-                                        chart: {
-                                          type: 'column'
-                                        },
-
-                                        title: {
-                                            text: 'Mailing List Subscribers'
-                                        },
-
-                                        subtitle: {
-                                            text: 'Click the columns to view monthly subscribers'
-                                        },
-
-                                        xAxis: {
-                                            type: 'category'
-                                        },
-
-                                        yAxis: {
-                                            title: {
-                                                text: 'Users'
-                                            }
-
-                                        },
-
-                                        credits: {
-                                          enabled: false
-                                        },
-
-                                        legend: {
-                                            enabled: false
-                                        },
-
-                                        plotOptions: {
-                                            series: {
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                    enabled: true,
-                                                    format: '{point.y}'
-                                                }
-                                            }
-                                        },
-
-                                        tooltip: {
-                                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> users added to Total Subscribers<br/>'
-                                        },
-
-                                        series: [{
-                                            name: 'Lists',
-                                            colorByPoint: true,
-                                            data: dataMC[0].obj1
-                                        }],
-
-                                        drilldown: {
-                                            series: dataMC[1].obj2
-                                        }
-                                    })
-                                };
-
-                                chart1 = function () {
-                                    Highcharts.chart('mc-container-1', {
-                                        title: {
-                                          text: 'Engagement Analysis'
-                                        },
-                                        xAxis: {
-                                          categories: names
-                                        },
-                                        labels: {
-                                            items: [{
-                                                html: 'Total fruit consumption',
-                                                style: {
-                                                    left: '50px',
-                                                    top: '18px',
-                                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                                                }
-                                            }]
-                                        },
-                                        credits: {
-                                          enabled: false
-                                        },
-                                        series: [{
-                                            type: 'column',
-                                            name: 'Click Rate',
-                                            data: click_rates
-                                        }, {
-                                            type: 'column',
-                                            name: 'Open Rate',
-                                            data: open_rates
-                                        }]
-                                    });
-                                }
-
-                                chart2 = function () {
-                                    Highcharts.chart('mc-container-2', {
-
-                                        chart: {
-                                          type: 'column'
-                                        },
-
-                                        title: {
-                                            text: ''
-                                        },
-
-                                        subtitle: {
-                                            text: ''
-                                        },
-
-                                        xAxis: {
-                                            type: 'category'
-                                        },
-
-                                        yAxis: {
-                                            title: {
-                                                text: 'Users'
-                                            }
-
-                                        },
-
-                                        legend: {
-                                            enabled: false
-                                        },
-
-                                        plotOptions: {
-                                            series: {
-                                                borderWidth: 0,
-                                                dataLabels: {
-                                                    enabled: true,
-                                                    format: '{point.y}'
-                                                }
-                                            }
-                                        },
-
-                                        tooltip: {
-                                            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> users added to Total Subscribers<br/>'
-                                        },
-
-                                        series: [{
-                                            name: 'Lists',
-                                            colorByPoint: true,
-                                            data: dataMC[3].obj4
-                                        }],
-
-                                        drilldown: {
-                                            series: dataMC[4].obj5
-                                        }
-                                    });
-                                }
-                            }
-                        })
-                        .then(function() {
-                            if (dataMC){
-                                chart0();
-                                chart1();
-                                chart2();
-                            } else {
-                                $scope.dashboard.widgets.pop();
-                                $scope.dashboard.widgets.pop();
-                                $scope.dashboard.widgets.pop();
-                                console.log($scope.dashboard.widgets);
-                            }
-
-                            chart3();
-                            chart4();
-                            chart5();
-                            chart6();
-                        });
-
+                        chart0();
+                        chart1();
+                        chart2();
+                        chart3();
                     }, function(err) {
                         console.log(err);
                     });
 
-                    $scope.$watch('[dashboard.widgets[0].sizeX, [dashboard.widgets[0].sizeY]]', function(newX, oldX) {
+                    UserService.GetCurrent().then(function (user) {
+                        vm.user = user;
+                        if (user.dash) {
+                            $scope.dashboard=user.dash;
+                        }
+                        if (user.apiKey) {
+                            dataMC = user.dataMC;
+                            dataMC[2].obj3.forEach(function(row, i) {
+                              click_rates.push(row.click_rate);
+                              open_rates.push(row.open_rate);
+                              names.push(row.title);
+                            });
+                            chart4 = function () {
+                                Highcharts.chart('mc-container-4', {
+                                    chart: {
+                                      type: 'column'
+                                    },
+
+                                    title: {
+                                        text: 'Mailing List Subscribers'
+                                    },
+
+                                    subtitle: {
+                                        text: 'Click the columns to view monthly subscribers'
+                                    },
+
+                                    xAxis: {
+                                        type: 'category'
+                                    },
+
+                                    yAxis: {
+                                        title: {
+                                            text: 'Users'
+                                        }
+
+                                    },
+
+                                    credits: {
+                                      enabled: false
+                                    },
+
+                                    legend: {
+                                        enabled: false
+                                    },
+
+                                    plotOptions: {
+                                        series: {
+                                            borderWidth: 0,
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '{point.y}'
+                                            }
+                                        }
+                                    },
+
+                                    tooltip: {
+                                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> users added to Total Subscribers<br/>'
+                                    },
+
+                                    series: [{
+                                        name: 'Lists',
+                                        colorByPoint: true,
+                                        data: dataMC[0].obj1
+                                    }],
+
+                                    drilldown: {
+                                        series: dataMC[1].obj2
+                                    }
+                                })
+                            };
+                            
+                            chart5 = function () {
+                                Highcharts.chart('mc-container-5', {
+                                    title: {
+                                      text: 'Engagement Analysis'
+                                    },
+                                    xAxis: {
+                                      categories: names
+                                    },
+                                    labels: {
+                                        items: [{
+                                            html: 'Total fruit consumption',
+                                            style: {
+                                                left: '50px',
+                                                top: '18px',
+                                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                                            }
+                                        }]
+                                    },
+                                    credits: {
+                                      enabled: false
+                                    },
+                                    series: [{
+                                        type: 'column',
+                                        name: 'Click Rate',
+                                        data: click_rates
+                                    }, {
+                                        type: 'column',
+                                        name: 'Open Rate',
+                                        data: open_rates
+                                    }]
+                                });
+                            }
+
+                            chart6 = function () {
+                                Highcharts.chart('mc-container-6', {
+
+                                    chart: {
+                                      type: 'column'
+                                    },
+
+                                    title: {
+                                        text: ''
+                                    },
+
+                                    subtitle: {
+                                        text: ''
+                                    },
+
+                                    xAxis: {
+                                        type: 'category'
+                                    },
+
+                                    yAxis: {
+                                        title: {
+                                            text: 'Users'
+                                        }
+
+                                    },
+
+                                    legend: {
+                                        enabled: false
+                                    },
+
+                                    plotOptions: {
+                                        series: {
+                                            borderWidth: 0,
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '{point.y}'
+                                            }
+                                        }
+                                    },
+
+                                    tooltip: {
+                                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> users added to Total Subscribers<br/>'
+                                    },
+
+                                    series: [{
+                                        name: 'Lists',
+                                        colorByPoint: true,
+                                        data: dataMC[3].obj4
+                                    }],
+
+                                    drilldown: {
+                                        series: dataMC[4].obj5
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .then(function() {
+                        if (dataMC){
+                            setTimeout(function() {
+                            chart4();
+                            chart5();
+                            chart6();
+                            }, 250);
+                        } else {
+                            $scope.dashboard.widgets.pop();
+                            $scope.dashboard.widgets.pop();
+                            $scope.dashboard.widgets.pop();
+                            console.log($scope.dashboard.widgets);
+                        }
+
+
+                    });
+
+                    $scope.$watch('[dashboard.widgets[0].sizeX, [dashboard.widgets[0].sizeY, [dashboard.widgets[0].col, [dashboard.widgets[0].row]]]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart0();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[1].sizeX, [dashboard.widgets[1].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[1].sizeX, [dashboard.widgets[1].sizeY, [dashboard.widgets[1].col, [dashboard.widgets[1].row]]]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart1();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[2].sizeX, [dashboard.widgets[2].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[2].sizeX, [dashboard.widgets[2].sizeY, [dashboard.widgets[2].col, [dashboard.widgets[2].row]]]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart2();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[3].sizeX, [dashboard.widgets[3].sizeY]]', function(newX, oldX) {
+                    $scope.$watch('[dashboard.widgets[3].sizeX, [dashboard.widgets[3].sizeY, [dashboard.widgets[3].col, [dashboard.widgets[3].row]]]]', function(newX, oldX) {
                       if (newX !== oldX) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart3();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[4].sizeX, [dashboard.widgets[4].sizeY]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                    $scope.$watch('[dashboard.widgets[4].sizeX, [dashboard.widgets[4].sizeY, [dashboard.widgets[4].col, [dashboard.widgets[4].row]]]]', function(newX, oldX) {
+                      if (newX !== oldX && chart4) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart4();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[5].sizeX, [dashboard.widgets[5].sizeY]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                    $scope.$watch('[dashboard.widgets[5].sizeX, [dashboard.widgets[5].sizeY, [dashboard.widgets[5].col, [dashboard.widgets[5].row]]]]', function(newX, oldX) {
+                      if (newX !== oldX && chart5) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart5();
                         }, 2000);
                       }
                     });
 
-                    $scope.$watch('[dashboard.widgets[6].sizeX, [dashboard.widgets[6].sizeY]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                    $scope.$watch('[dashboard.widgets[6].sizeX, [dashboard.widgets[6].sizeY, [dashboard.widgets[6].col, [dashboard.widgets[6].row]]]]', function(newX, oldX) {
+                      if (newX !== oldX && chart6) {
                         setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                             chart6();
                         }, 2000);
                       }

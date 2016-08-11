@@ -73,6 +73,23 @@ function updateUser(req, res) {
         });
 }
 
+function updateDash(req, res) {
+    console.log('im in update dash');
+    var userId = req.user.sub;
+    if (req.params._id !== userId) {
+        // can only update own account
+        return res.status(401).send('Im in users controller api');
+    }
+
+    userService.updateDash(userId, req.body)
+        .then(function () {
+            res.sendStatus(200);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
 function deleteUser(req, res) {
     var userId = req.user.sub;
     if (req.params._id !== userId) {

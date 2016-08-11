@@ -15,13 +15,8 @@
         service.Create = Create;
         service.Update = Update;
         service.Delete = Delete;
-        service.GetMC = GetMC;
 
         return service;
-
-        function GetMC() {
-            return $http.get('/api/users/MC').then(handleSuccess, handleError);
-        }
 
         function GetCurrent() {
             return $http.get('/api/users/current').then(handleSuccess, handleError);

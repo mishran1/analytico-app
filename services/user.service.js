@@ -102,100 +102,105 @@ function create(userParam) {
 function update(_id, userParam) {
     var deferred = Q.defer();
 
-    // validation
-    db.users.findById(_id, function (err, user) {
-        var currentUser = user;
+    if(userParam.dflag == '1') {
+        updateDash(_id, userParam.dash);
+    }
+    else {
+        // validation
+        db.users.findById(_id, function (err, user) {
+            var currentUser = user;
 
-        if (err) deferred.reject(err);
+            if (err) deferred.reject(err);
 
-        if (user.username !== userParam.username) {
-            // username has changed so check if the new username is already taken
-            db.users.findOne(
-                { username: userParam.username },
-                function (err, user) {
-                    if (err) deferred.reject(err);
+            if (user.username !== userParam.username) {
+                // username has changed so check if the new username is already taken
+                db.users.findOne(
+                    { username: userParam.username },
+                    function (err, user) {
+                        if (err) deferred.reject(err);
 
-                    if (user) {
-                        // username already exists
-                        deferred.reject('Username "' + req.body.username + '" is already taken')
-                    } else {
-                        // fields to update
-                        var set = {
-                            firstName: userParam.firstName,
-                            lastName: userParam.lastName,
-                            username: userParam.username,
-                            apiKey: userParam.apiKey,
-                        };
+                        if (user) {
+                            // username already exists
+                            deferred.reject('Username "' + req.body.username + '" is already taken')
+                        } else {
+                            // fields to update
+                            var set = {
+                                firstName: userParam.firstName,
+                                lastName: userParam.lastName,
+                                username: userParam.username,
+                                apiKey: userParam.apiKey,
+                            };
 
-                        // update password if it was entered
-                        if (userParam.password) {
-                            set.hash = bcrypt.hashSync(userParam.password, 10);
+                            // update password if it was entered
+                            if (userParam.password) {
+                                set.hash = bcrypt.hashSync(userParam.password, 10);
+                            }
+
+                            updateUser(set);
                         }
-
-                        updateUser(set);
-                    }
-                });
-        } else if (userParam.apiKey) {
-
-            var now = moment().format('YYYY-MM-DD-HH-mm-ss');
-            var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
-            var d = moment.duration(diff);
-
-            if (user.apiKey !== userParam.apiKey || d>300000) {
-                if(!MCStatus || user.apiKey !== userParam.apiKey) {
-                    MCStatus = true;
-                    var getData = new Promise(function(resolve, reject) {
-                        var temp = MCController.getMC(userParam.apiKey);
-                        resolve(temp);
                     });
+            } else if (userParam.apiKey) {
 
-                    getData.then(function(result) {
+                var now = moment().format('YYYY-MM-DD-HH-mm-ss');
+                var diff = moment(now,'YYYY-MM-DD-HH-mm-ss').diff(moment(userParam.modTime,'YYYY-MM-DD-HH-mm-ss'));
+                var d = moment.duration(diff);
 
-                        // fields to update
-                        var set = {
-                            firstName: userParam.firstName,
-                            lastName: userParam.lastName,
-                            username: userParam.username,
-                            apiKey: userParam.apiKey,
-                            dataMC: result,
-                            modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
-                        };
-
-                        // update password if it was entered
-                        if (userParam.password) {
-                            set.hash = bcrypt.hashSync(userParam.password, 10);
-                        }
-
-                        updateUser(set);
-                        MCStatus = false;
-                    },  function(err) {
-                            console.log(err);
+                if (user.apiKey !== userParam.apiKey || d>3000000) {
+                    if(!MCStatus || user.apiKey !== userParam.apiKey) {
+                        MCStatus = true;
+                        var getData = new Promise(function(resolve, reject) {
+                            var temp = MCController.getMC(userParam.apiKey);
+                            resolve(temp);
                         });
+
+                        getData.then(function(result) {
+
+                            // fields to update
+                            var set = {
+                                firstName: userParam.firstName,
+                                lastName: userParam.lastName,
+                                username: userParam.username,
+                                apiKey: userParam.apiKey,
+                                dataMC: result,
+                                modTime: moment().format('YYYY-MM-DD-HH-mm-ss'),
+                            };
+
+                            // update password if it was entered
+                            if (userParam.password) {
+                                set.hash = bcrypt.hashSync(userParam.password, 10);
+                            }
+
+                            updateUser(set);
+                            MCStatus = false;
+                        },  function(err) {
+                                console.log(err);
+                            });
+                    }
+                    else {
+                        console.log('im already running');
+                    }
                 }
                 else {
-                    console.log('im already running');
+                    console.log('Data up to date');
                 }
-            }
-            else {
-                console.log('Data up to date');
-            }
-        } else {
-            // fields to update
-            var set = {
-                firstName: userParam.firstName,
-                lastName: userParam.lastName,
-                username: userParam.username,
-                apiKey: userParam.apiKey,
-            };
+            } else {
+                // fields to update
+                var set = {
+                    firstName: userParam.firstName,
+                    lastName: userParam.lastName,
+                    username: userParam.username,
+                    apiKey: userParam.apiKey,
+                };
 
-            // update password if it was entered
-            if (userParam.password) {
-                set.hash = bcrypt.hashSync(userParam.password, 10);
-            }
+                // update password if it was entered
+                if (userParam.password) {
+                    set.hash = bcrypt.hashSync(userParam.password, 10);
+                }
 
-            updateUser(set);
-        }
-    });
+                updateUser(set);
+            }
+        });
+    }
 
     function updateUser(set) {
         db.users.update(
@@ -207,6 +212,21 @@ function update(_id, userParam) {
             deferred.resolve();
         });
     }
+
+    function updateDash(_id, dash) {
+        var set = {
+            dash: dash,
+        }
+        db.users.update(
+            { _id: mongo.helper.toObjectID(_id) },
+            { $set: set },
+            function (err, doc) {
+                if(err) deferred.reject(err);
+
+                deferred.resolve();
+            });
+        }
+
     return deferred.promise;
 }
 
@@ -223,3 +243,4 @@ function _delete(_id) {
 
     return deferred.promise;
 }
+
