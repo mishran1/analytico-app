@@ -51,14 +51,10 @@
 
         body {
           color: #5a5a5a;
+          padding-bottom: 80px;
         }
 
-        .footer {
-          position: absolute;
-          bottom: 0 !important;
-          width: 100%;
-          /* Set the fixed height of the footer here */
-          height: 60px;
+        footer {
           background-color: #f5f5f5;
         }
 
@@ -66,7 +62,7 @@
           margin: 20px 0;
         }
 
-        .footer > .container {
+        footer > .container {
           padding-right: 15px;
           padding-left: 15px;
         }
@@ -203,10 +199,6 @@
           text-align: center;
         }
 
-        .margin-caption {
-          width: 100px;
-        }
-
         .input-symbol > input {
           padding-left: 30px;
           font-size: 26px;
@@ -217,12 +209,27 @@
           height: 70px;
           border-color: #ededed;
           transition-property: border-color;
-          transition-duration: .2s;
+          transition-duration: .1s;
           transition-timing-function: linear;
         }
 
-        .input-symbol > input:hover, 
+        .phase2,
+        .phase3,
+        .phase4 {
+          display: none;
+        }
+
+        .col-sm-10 {
+          margin: 0 auto;
+          float: none;
+        }
+
+        .input-symbol > input:hover {
+          border-color: #00ac98;
+        }
+
         .input-symbol > input:focus {
+          border-width: 3px;
           border-color: #00ac98;
         }
 
@@ -240,6 +247,48 @@
           padding-left: 2px;
           content:"$";
           font-size: 350%;
+          opacity: .3;
+        }
+
+        .input-percent {
+          position: relative;
+          text-align: center;
+          font-weight: 200;
+          display: block;
+          color: #7f8c8d;
+          font-size: 13px;
+        }
+
+        .input-percent:before {
+          position: absolute;
+          left: 215px;
+          content:"%";
+          font-size: 350%;
+          opacity: .3;
+        }
+
+        .input-percent > input:hover {
+          border-color: #00ac98;
+        }
+
+        .input-percent > input:focus {
+          border-width: 3px;
+          border-color: #00ac98;
+        }
+
+        .input-percent > input {
+          padding-left:5px;
+          padding-right: 35px;
+          font-size: 26px;
+          left: 50%;
+          float: none;
+          outline: none;
+          width: 125px;
+          height: 70px;
+          border-color: #ededed;
+          transition-property: border-color;
+          transition-duration: .1s;
+          transition-timing-function: linear;
         }
 
         .calc-holder {
@@ -364,20 +413,18 @@
 
         .output-caption {
           text-align: center;
-          font-weight: 200;
+          font-weight: bold;
           display: block;
           color: white;
           font-size: 16px;
-          padding-top: 56px;
+          padding-top: 60px;
         }
 
-        #margin-result {
+        .results {
           position: relative;
           text-align: center;
-          font-weight: 200;
           display: block;
           color: white;
-          font-size: 34px;
         }
 
         .form-pricing {
@@ -439,10 +486,9 @@
         /* HR */
 
         hr.style {
-          margin-top: 0;
-            border: 0;
-            border-bottom: 1px dashed #ccc;
-            background: #999;
+          border: 0;
+          border-bottom: 1px dashed #ccc;
+          background: #999;
         }
 
     </style>
