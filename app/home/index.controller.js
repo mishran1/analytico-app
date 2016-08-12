@@ -344,6 +344,10 @@
                                               }
                                             },
 
+                                            credits: {
+                                              enabled: false
+                                            },
+
                                             tooltip: {
                                               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
                                             },
@@ -562,6 +566,10 @@
                                               }
                                           },
 
+                                          credits: {
+                                              enabled: false
+                                          },
+
                                           series: [{
                                               name: 'Browsers',
                                               data: data
@@ -623,6 +631,10 @@
 
                                           tooltip: {
                                               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                          },
+
+                                          credits: {
+                                              enabled: false
                                           },
 
                                           plotOptions: {
@@ -857,6 +869,10 @@
                                             text: 'Users'
                                         }
 
+                                    },
+
+                                    credits: {
+                                      enabled: false
                                     },
 
                                     legend: {
@@ -1113,7 +1129,7 @@
                         'w': window.innerWidth
                     };
                 }, function (newValue, oldValue) {
-                    
+                    setTimeout(function () {
                         scope.chart0();
                         scope.chart1();
                         scope.chart2();
@@ -1121,6 +1137,7 @@
                         scope.chart4();
                         scope.chart5();
                         scope.chart6();
+                    }, 250);
 
                     scope.resizeWithOffset = function (offsetH) {
                         scope.$eval(attr.notifier);
