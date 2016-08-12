@@ -8,6 +8,7 @@
             function ($scope, $timeout, UserService, $rootScope, $window) {
                 var vm = this;
                 vm.user = null;
+
                 $window.location.href = '/app/#/';
                 if ($rootScope.flagH == '1') {
                     $rootScope.flagH = '0';
@@ -37,7 +38,7 @@
                                 linearGradient: [0, 0, 500, 500],
                                 stops: [
                                     [0, 'rgb(255, 255, 255)'],
-                                    [1, 'rgb(0, 4, 255)']
+                                    [1, 'rgb(255, 250, 250)']
                                 ]
                             },
                         },
@@ -70,7 +71,7 @@
 
                     $scope.gridsterOptions = {
                             margins: [20, 20],
-                            columns: 4,
+                            columns: 6,
                             draggable: {
                                 handle: 'h3'
                             },
@@ -311,7 +312,7 @@
                                     });
 
 
-                                    chart0 = function () {
+                                    $scope.chart0 = function () {
                                         Highcharts.chart('mc-container-0', {
 
                                             chart: {
@@ -431,7 +432,7 @@
                                     };
 
 
-                                    chart1 = function () {
+                                    $scope.chart1 = function () {
                                         Highcharts.chart('mc-container-1', {
 
                                           chart: {
@@ -528,7 +529,7 @@
                                     });
 
 
-                                    chart2 = function () {
+                                    $scope.chart2 = function () {
                                         Highcharts.chart('mc-container-2', {
 
                                           chart: {
@@ -605,7 +606,7 @@
                                     });
 
 
-                                    chart3 = function () {
+                                    $scope.chart3 = function () {
                                         Highcharts.chart('mc-container-3', {
 
                                           chart: {
@@ -719,10 +720,10 @@
                     })
 
                     gaData.then(function(result){
-                        chart0();
-                        chart1();
-                        chart2();
-                        chart3();
+                        $scope.chart0();
+                        $scope.chart1();
+                        $scope.chart2();
+                        $scope.chart3();
                     }, function(err) {
                         console.log(err);
                     });
@@ -739,7 +740,7 @@
                               open_rates.push(row.open_rate);
                               names.push(row.title);
                             });
-                            chart4 = function () {
+                            $scope.chart4 = function () {
                                 Highcharts.chart('mc-container-4', {
                                     chart: {
                                       type: 'column'
@@ -799,7 +800,7 @@
                                 })
                             };
                             
-                            chart5 = function () {
+                            $scope.chart5 = function () {
                                 Highcharts.chart('mc-container-5', {
                                     title: {
                                       text: 'Engagement Analysis'
@@ -832,7 +833,7 @@
                                 });
                             }
 
-                            chart6 = function () {
+                            $scope.chart6 = function () {
                                 Highcharts.chart('mc-container-6', {
 
                                     chart: {
@@ -893,9 +894,9 @@
                     .then(function() {
                         if (dataMC){
                             setTimeout(function() {
-                            chart4();
-                            chart5();
-                            chart6();
+                            $scope.chart4();
+                            $scope.chart5();
+                            $scope.chart6();
                             }, 250);
                         } else {
                             $scope.dashboard.widgets.pop();
@@ -919,7 +920,7 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart0();
+                            $scope.chart0();
                         }, 2000);
                       }
                     });
@@ -936,7 +937,7 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart1();
+                            $scope.chart1();
                         }, 2000);
                       }
                     });
@@ -953,7 +954,7 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart2();
+                            $scope.chart2();
                         }, 2000);
                       }
                     });
@@ -970,13 +971,13 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart3();
+                            $scope.chart3();
                         }, 2000);
                       }
                     });
 
                     $scope.$watch('[dashboard.widgets[4].sizeX, [dashboard.widgets[4].sizeY, [dashboard.widgets[4].col, [dashboard.widgets[4].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX && chart4) {
+                      if (newX !== oldX && $scope.chart4) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -987,13 +988,13 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart4();
+                            $scope.chart4();
                         }, 2000);
                       }
                     });
 
                     $scope.$watch('[dashboard.widgets[5].sizeX, [dashboard.widgets[5].sizeY, [dashboard.widgets[5].col, [dashboard.widgets[5].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX && chart5) {
+                      if (newX !== oldX && $scope.chart5) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -1004,13 +1005,13 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart5();
+                            $scope.chart5();
                         }, 2000);
                       }
                     });
 
                     $scope.$watch('[dashboard.widgets[6].sizeX, [dashboard.widgets[6].sizeY, [dashboard.widgets[6].col, [dashboard.widgets[6].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX && chart6) {
+                      if (newX !== oldX && $scope.chart6) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -1021,7 +1022,7 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                            chart6();
+                            $scope.chart6();
                         }, 2000);
                       }
                     });
@@ -1100,5 +1101,39 @@
                 };
 
             }
-        ]);
+        ])
+
+        .directive('resize', function ($window) {
+            return function (scope, element, attr) {
+
+                var w = angular.element($window);
+                scope.$watch(function () {
+                    return {
+                        'h': window.innerHeight, 
+                        'w': window.innerWidth
+                    };
+                }, function (newValue, oldValue) {
+                    
+                        scope.chart0();
+                        scope.chart1();
+                        scope.chart2();
+                        scope.chart3();
+                        scope.chart4();
+                        scope.chart5();
+                        scope.chart6();
+
+                    scope.resizeWithOffset = function (offsetH) {
+                        scope.$eval(attr.notifier);
+                        return { 
+                            'height': (newValue.h - offsetH) + 'px'                    
+                        };
+                    };
+
+                }, true);
+
+                w.bind('resize', function () {
+                    scope.$apply();
+                });
+            }
+        });
 })();

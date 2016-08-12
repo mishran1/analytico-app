@@ -4,8 +4,11 @@ body {
     padding: 70px 0;
 }
 
-/* NAVIGATION */
+.container {
+    width: 100%;
+}
 
+/* NAVIGATION */
 
 .flash-message {
     margin-top: 20px;

@@ -29,6 +29,7 @@
 	<div id="view-name" class="hidden"></div>
 	<div id="active-users-container" class="hidden"></div>
 </div>
+
 <div gridster="gridsterOptions">
 	<!-- <ul> -->
 		<li gridster-item="widget" ng-repeat="widget in dashboard.widgets" >
@@ -42,8 +43,13 @@
 				</div>
 				<div style="width: 100%; height: calc(100% - 47px);" id="mc-container-{{widget.index}}">
 				</div>
-			</div>
+			</div>	
 		</li>
+
+		<div ng-style="resizeWithOffset(165)" 
+		       resize
+		     notifier="notifyServiceOnChange(params)">
+		</div>
 	<!-- </ul> -->
 </div>
 <div id="chart-top-products" ng-app="app"></div>
