@@ -270,8 +270,28 @@
                                 renderYearOverYearChart(data.ids);
                                 renderTopBrowsersChart(data.ids);
                                 renderTopCountriesChart(data.ids);
+                                getCommunityData(data.ids);
                             });
 
+                            function getCommunityData(ids) {
+                                var now = moment();
+
+                                var sessions = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:month',
+                                  'metrics': 'ga:sessions',
+                                  'start-date': moment(now).date(1).month(0).format('YYYY-MM-DD'),
+                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                });
+
+                                sessions.then(function (results) {
+                                    UserService.GetCurrent().then(function (user) {
+                                        var newUser = user;
+                                        newUser.gflag = '1';
+                                        UserService.Update(newUser);
+                                    });
+                                });
+                            }
 
                             /**
                             * Draw the a chart.js line chart with data from the specified view that

@@ -43,7 +43,7 @@ function authenticate(username, password) {
 }
 
 function getById(_id) {
-    var deferred = Q.defer();
+    var deferred = Q.defer(); 
 
     db.users.findById(_id, function (err, user) {
         if (err) deferred.reject(err);
@@ -105,6 +105,12 @@ function update(_id, userParam) {
     if(userParam.dflag == '1') {
         updateDash(_id, userParam.dash);
     }
+
+    if (userParam.gflag == '1') {
+        console.log('test');
+        saveGA(_id, userParam.results);
+    }
+
     else {
         // validation
         db.users.findById(_id, function (err, user) {
@@ -138,7 +144,8 @@ function update(_id, userParam) {
 
                             updateUser(set);
                         }
-                    });
+                    }
+                );
             } else if (userParam.apiKey) {
 
                 var now = moment().format('YYYY-MM-DD-HH-mm-ss');
@@ -225,7 +232,21 @@ function update(_id, userParam) {
 
                 deferred.resolve();
             });
+    }
+
+    function saveGA(_id, dataGA) {
+        var set = {
+            dataGA: dataGA,
         }
+        db.users.update(
+            { _id: mongo.helper.toObjectID(_id) },
+            { $set: set },
+            function (err, doc) {
+                if(err) deferred.reject(err);
+
+                deferred.resolve();
+        });
+    }
 
     return deferred.promise;
 }
