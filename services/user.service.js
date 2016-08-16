@@ -104,8 +104,10 @@ function update(_id, userParam) {
 
     if(userParam.dflag == '1') {
         updateDash(_id, userParam.dash);
-    }
-    else {
+    } else if (userParam.gflag == '1') {
+        console.log('im here');
+        updateGA(_id, userParam.dataGA);
+    } else {
         // validation
         db.users.findById(_id, function (err, user) {
             var currentUser = user;
@@ -226,6 +228,20 @@ function update(_id, userParam) {
                 deferred.resolve();
             });
         }
+
+    function updateGA(_id, dataGA) {
+        var set = {
+            dataGA: dataGA,
+        }
+        db.users.update(
+            { _id: mongo.helper.toObjectID(_id) },
+            { $set: set },
+            function (err, doc) {
+                if(err) deferred.reject(err);
+
+                deferred.resolve();
+            });
+    }
 
     return deferred.promise;
 }

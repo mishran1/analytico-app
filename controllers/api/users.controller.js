@@ -4,14 +4,11 @@ var router = express.Router();
 var userService = require('services/user.service');
 var Mailchimp = require('mailchimp-api-v3');
 
-// Calling the specific MailChimp controller logic
-var MCController = require('controllers/api/MC.controller');
 
 // routes
 router.post('/authenticate', authenticateUser);
 router.post('/register', registerUser);
 router.get('/current', getCurrentUser);
-router.get('/MC', MCController);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 

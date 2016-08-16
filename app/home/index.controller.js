@@ -16,6 +16,7 @@
                 }
                 else {
                     $rootScope.flag = '1';
+                    let dataGA;
                     let dataMC;
                     var hide = [];
                     var names = [];
@@ -270,7 +271,38 @@
                                 renderYearOverYearChart(data.ids);
                                 renderTopBrowsersChart(data.ids);
                                 renderTopCountriesChart(data.ids);
+                                storeGA(data.ids);
                             });
+
+
+                            function storeGA(ids) {
+                                var now = moment(); // .subtract(3, 'day');
+
+                                var thisWeek = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:date,ga:nthDay',
+                                  'metrics': 'ga:sessions',
+                                  'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                });
+
+                                thisWeek.then(function(result) {
+                                    dataGA = result;
+                                    UserService.GetCurrent().then(function (user) {
+                                        var currentUser = user;
+                                        currentUser.dataGA = result;
+                                        currentUser.gflag = '1';
+                                        UserService.Update(currentUser)
+                                        .then(function () {
+                                            console.log('GA data updated');
+                                        })
+                                        .catch(function (error) {
+                                            console.log(error);
+                                        });
+                                    });
+
+                                });
+                            }
 
 
                             /**
