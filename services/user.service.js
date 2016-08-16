@@ -21,8 +21,19 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
+service.getCommunity = getCommunity;
 
 module.exports = service;
+
+function getCommunity() {
+    var deferred = Q.defer();
+    db.users.distinct("dataGA", function (err, dataGA) {
+        if (err) deferred.reject(err);
+        deferred.resolve(dataGA);
+    });
+
+    return deferred.promise;
+}
 
 function authenticate(username, password) {
     var deferred = Q.defer();

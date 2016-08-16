@@ -9,10 +9,21 @@ var Mailchimp = require('mailchimp-api-v3');
 router.post('/authenticate', authenticateUser);
 router.post('/register', registerUser);
 router.get('/current', getCurrentUser);
+router.get('/community', getCommunityData);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
 module.exports = router;
+
+function getCommunityData(req, res) {
+    userService.getCommunity()
+        .then(function (dataGA) {
+            res.send(dataGA);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
 
 function authenticateUser(req, res) {
     userService.authenticate(req.body.username, req.body.password)

@@ -14,8 +14,13 @@
         service.Create = Create;
         service.Update = Update;
         service.Delete = Delete;
+        service.GetCommunityData = GetCommunityData;
 
         return service;
+
+        function GetCommunityData() {
+            return $http.get('/api/users/community').then(handleSuccess, handleError);
+        }
 
         function GetCurrent() {
             return $http.get('/api/users/current').then(handleSuccess, handleError);
