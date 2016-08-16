@@ -50,12 +50,17 @@ function getCommunity() {
     var deferred = Q.defer();
 
     db.Community.aggregate([
-        {   "$unwind": "$dataGA"    },
-        { "$group": {
-            "_id": "$dataGA.day",
-            "avgCR": { "$avg": "$dataGA.CR" }
+        {   $unwind: "$dataGA"  },
+        { $group: {
+            _id: "$dataGA.day",
+            avgCR: { $avg: "$dataGA.CR"},
+            avgRev: { $avg: "$dataGA.revenue"},
+            avgAOV: { $avg: "$dataGA.AOV"},
+            avgCPA: { $avg: "$dataGA.CPA"},
+            avgSessions: { $avg: "$dataGA.sessions"}
             }
         },
+
         { $sort: { _id : 1 }}
     ], function (err, result) {
         if (err) deferred.reject(err);

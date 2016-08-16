@@ -291,11 +291,11 @@
                                     result.rows.forEach(function(row, i) {
                                         dataGA.push({
                                             day: i+1,
-                                            sessions: row[1],
-                                            AOV: row[2],
+                                            sessions: row[1]*1,
+                                            AOV: row[2]*1,
                                             CR: (row[4]/row[1])*100,
-                                            revenue: row[3],
-                                            CPA: row[5]
+                                            revenue: row[3]*1,
+                                            CPA: row[5]*1
                                         })
                                     });
                                     UserService.SetCommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
