@@ -271,11 +271,11 @@
                                 renderYearOverYearChart(data.ids);
                                 renderTopBrowsersChart(data.ids);
                                 renderTopCountriesChart(data.ids);
-                                storeGA(data.ids);
+                                getCommunityData(data.ids);
                             });
+                            
 
-
-                            function storeGA(ids) {
+                            function getCommunityData(ids) {
                                 var now = moment(); // .subtract(3, 'day');
 
                                 var thisWeek = query({

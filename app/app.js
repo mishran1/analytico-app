@@ -31,6 +31,13 @@
                 controllerAs: 'vm',
                 data: { activeTab: 'analytics' }
             })
+            .state('community', {
+                url: '/community',
+                templateUrl: 'community/index.html',
+                controller: 'Community.IndexController',
+                controllerAs: 'vm',
+                data: { activeTab: 'community' }
+            })
             .state('about', {
                 url: '/about',
                 templateUrl: 'about/index.html',
