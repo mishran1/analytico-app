@@ -23,8 +23,8 @@
             return $http.get('/api/users/community').then(handleSuccess, handleError);
         }
 
-        function SetCommunityData(dataGA) {
-            return $http.put('/api/users/community/' + dataGA.profileInfo.profileId, dataGA).then(handleSuccess, handleError);
+        function SetCommunityData(id, dataGA) {
+            return $http.put('/api/users/community/' + id, dataGA).then(handleSuccess, handleError);
         }
 
         function GetCurrent() {

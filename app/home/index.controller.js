@@ -277,35 +277,32 @@
 
                             function getCommunityData(ids) {
                                 var now = moment(); // .subtract(3, 'day');
+                                var dataGA = [];
 
                                 var thisWeek = query({
                                   'ids': ids,
-                                  'dimensions': 'ga:date,ga:nthDay',
-                                  'metrics': 'ga:sessions',
-                                  'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
-                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                  'dimensions': 'ga:day',
+                                  'metrics': 'ga:sessions, ga:revenuePerTransaction, ga:transactionRevenue, ga:transactions, ga:costPerTransaction',
+                                  'start-date': moment(now).subtract(1, 'months').startOf("month").format('YYYY-MM-DD'),
+                                  'end-date': moment(now).subtract(1, 'months').endOf("month").format('YYYY-MM-DD')
                                 });
 
                                 thisWeek.then(function(result) {
-                                    dataGA = result;
-                                    console.log(result);
-                                    UserService.SetCommunityData(result).then(function (users) {
-                                      console.log(users);
-                                    });
-                                    UserService.GetCurrent().then(function (user) {
-                                        var currentUser = user;
-                                        currentUser.dataGA = result;
-                                        currentUser.gflag = '1';
-                                        UserService.Update(currentUser)
-                                        .then(function () {
-                                            console.log('GA data updated');
+                                    result.rows.forEach(function(row, i) {
+                                        dataGA.push({
+                                            day: i+1,
+                                            sessions: row[1],
+                                            AOV: row[2],
+                                            CR: (row[4]/row[1])*100,
+                                            revenue: row[3],
+                                            CPA: row[5]
                                         })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                        });
                                     });
+                                    UserService.SetCommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
+                                        console.log(status);
+                                    });
+                                })
 
-                                });
                             }
 
 

@@ -27,7 +27,7 @@ function getCommunityData(req, res) {
 }
 
 function setCommunityData(req, res) {
-    userService.setCommunity(req.body)
+    userService.setCommunity(req.params.dataGA, req.body)
         .then(function (dataGA) {
             res.sendStatus(200)
         })

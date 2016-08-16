@@ -330,6 +330,7 @@
                 renderTopBrowsersChart(data.ids);
                 renderTopCountriesChart(data.ids);
                 renderTopProductsChart(data.ids);
+                
               });
 
 

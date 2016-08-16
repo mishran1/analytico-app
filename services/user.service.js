@@ -27,14 +27,14 @@ service.setCommunity = setCommunity;
 
 module.exports = service;
 
-function setCommunity(dataGA) {
+function setCommunity(id, dataGA) {
     var deferred = Q.defer();
 
     var set = {
         dataGA: dataGA,
     }
     db.Community.update(
-        { _id: dataGA.profileInfo.profileId },
+        { _id: id},
         { $set: set },
         { upsert: true },
         function (err, doc) {
@@ -48,9 +48,19 @@ function setCommunity(dataGA) {
 
 function getCommunity() {
     var deferred = Q.defer();
-    db.Community.distinct("dataGA", function (err, dataGA) {
+
+    db.Community.aggregate([
+        {   "$unwind": "$dataGA"    },
+        { "$group": {
+            "_id": "$dataGA.day",
+            "avgCR": { "$avg": "$dataGA.CR" }
+            }
+        },
+        { $sort: { _id : 1 }}
+    ], function (err, result) {
         if (err) deferred.reject(err);
-        deferred.resolve(dataGA);
+
+        deferred.resolve(result);
     });
 
     return deferred.promise;
