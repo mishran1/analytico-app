@@ -288,6 +288,10 @@
 
                                 thisWeek.then(function(result) {
                                     dataGA = result;
+                                    console.log(result);
+                                    UserService.SetCommunityData(result).then(function (users) {
+                                      console.log(users);
+                                    });
                                     UserService.GetCurrent().then(function (user) {
                                         var currentUser = user;
                                         currentUser.dataGA = result;

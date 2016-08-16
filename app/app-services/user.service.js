@@ -15,11 +15,16 @@
         service.Update = Update;
         service.Delete = Delete;
         service.GetCommunityData = GetCommunityData;
+        service.SetCommunityData = SetCommunityData;
 
         return service;
 
         function GetCommunityData() {
             return $http.get('/api/users/community').then(handleSuccess, handleError);
+        }
+
+        function SetCommunityData(dataGA) {
+            return $http.put('/api/users/community/' + dataGA.profileInfo.profileId, dataGA).then(handleSuccess, handleError);
         }
 
         function GetCurrent() {
@@ -39,7 +44,6 @@
         }
 
         function Update(user) {
-            console.log(user.gflag);
             return $http.put('/api/users/' + user._id, user).then(handleSuccess, handleError);
         }
 

@@ -10,6 +10,7 @@ router.post('/authenticate', authenticateUser);
 router.post('/register', registerUser);
 router.get('/current', getCurrentUser);
 router.get('/community', getCommunityData);
+router.put('/community/:dataGA', setCommunityData);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
@@ -19,6 +20,16 @@ function getCommunityData(req, res) {
     userService.getCommunity()
         .then(function (dataGA) {
             res.send(dataGA);
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
+function setCommunityData(req, res) {
+    userService.setCommunity(req.body)
+        .then(function (dataGA) {
+            res.sendStatus(200)
         })
         .catch(function (err) {
             res.status(400).send(err);

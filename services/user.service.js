@@ -8,6 +8,7 @@ var Mailchimp = require('mailchimp-api-v3');
 var moment = require('moment');
 var db = mongo.db(config.connectionString, { native_parser: true });
 db.bind('users');
+db.bind('Community');
 
 var MCStatus = false;
 
@@ -22,12 +23,32 @@ service.create = create;
 service.update = update;
 service.delete = _delete;
 service.getCommunity = getCommunity;
+service.setCommunity = setCommunity;
 
 module.exports = service;
 
+function setCommunity(dataGA) {
+    var deferred = Q.defer();
+
+    var set = {
+        dataGA: dataGA,
+    }
+    db.Community.update(
+        { _id: dataGA.profileInfo.profileId },
+        { $set: set },
+        { upsert: true },
+        function (err, doc) {
+            if(err) deferred.reject(err);
+
+            deferred.resolve();
+    });
+
+    return deferred.promise;
+}
+
 function getCommunity() {
     var deferred = Q.defer();
-    db.users.distinct("dataGA", function (err, dataGA) {
+    db.Community.distinct("dataGA", function (err, dataGA) {
         if (err) deferred.reject(err);
         deferred.resolve(dataGA);
     });
@@ -116,7 +137,6 @@ function update(_id, userParam) {
     if(userParam.dflag == '1') {
         updateDash(_id, userParam.dash);
     } else if (userParam.gflag == '1') {
-        console.log('im here');
         updateGA(_id, userParam.dataGA);
     } else {
         // validation
