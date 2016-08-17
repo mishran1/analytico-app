@@ -22,12 +22,13 @@ service.getById = getById;
 service.create = create;
 service.update = update;
 service.delete = _delete;
-service.getCommunity = getCommunity;
-service.setCommunity = setCommunity;
+service.getGACommunity = getGACommunity;
+service.setGACommunity = setGACommunity;
+service.getMailChimpCommunity = getMailChimpCommunity;
 
 module.exports = service;
 
-function setCommunity(id, dataGA) {
+function setGACommunity(id, dataGA) {
     var deferred = Q.defer();
 
     var set = {
@@ -46,10 +47,11 @@ function setCommunity(id, dataGA) {
     return deferred.promise;
 }
 
-function getCommunity() {
+function getGACommunity() {
     var deferred = Q.defer();
 
     db.Community.aggregate([
+        {   $match: { _id: { $ne: "nish" } } },
         {   $unwind: "$dataGA"  },
         { $group: {
             _id: "$dataGA.day",
@@ -65,6 +67,28 @@ function getCommunity() {
     ], function (err, result) {
         if (err) deferred.reject(err);
 
+        deferred.resolve(result);
+    });
+
+    return deferred.promise;
+}
+
+function getMailChimpCommunity() {
+    var deferred = Q.defer();
+
+    db.users.aggregate([
+        {   $match: { username: { $ne: "nish" } } },
+        {   $unwind: "$dataMC"  },
+        {   $unwind: "$dataMC.obj3"     },
+        { $group: {
+            _id: null,
+            avgOpenRate: {  $avg:   "$dataMC.obj3.open_rate"    },
+            avgClickRate: { $avg:   "$dataMC.obj3.click_rate"   },
+            }
+        },
+    ], function (err, result) {
+        if (err) deferred.reject(err);
+        console.log(result);
         deferred.resolve(result);
     });
 

@@ -9,15 +9,16 @@ var Mailchimp = require('mailchimp-api-v3');
 router.post('/authenticate', authenticateUser);
 router.post('/register', registerUser);
 router.get('/current', getCurrentUser);
-router.get('/community', getCommunityData);
-router.put('/community/:dataGA', setCommunityData);
+router.put('/getGAcommunity/:gaid', getGACommunityData);
+router.put('/setGAcommunity/:dataGA', setGACommunityData);
+router.get('/mccommunity', getMailChimpCommunityData);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
 module.exports = router;
 
-function getCommunityData(req, res) {
-    userService.getCommunity()
+function getGACommunityData(req, res) {
+    userService.getGACommunity()
         .then(function (dataGA) {
             res.send(dataGA);
         })
@@ -26,10 +27,20 @@ function getCommunityData(req, res) {
         });
 }
 
-function setCommunityData(req, res) {
-    userService.setCommunity(req.params.dataGA, req.body)
+function setGACommunityData(req, res) {
+    userService.setGACommunity(req.params.dataGA, req.body)
         .then(function (dataGA) {
             res.sendStatus(200)
+        })
+        .catch(function (err) {
+            res.status(400).send(err);
+        });
+}
+
+function getMailChimpCommunityData(req, res) {
+    userService.getMailChimpCommunity()
+        .then(function (dataMC) {
+            res.send(dataMC);
         })
         .catch(function (err) {
             res.status(400).send(err);

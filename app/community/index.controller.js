@@ -12,10 +12,13 @@
 
         function initController() {
             // get all users
-            UserService.GetCommunityData().then(function (users) {
-              console.log(users);
+            UserService.GetGACommunityData().then(function (dataGA) {
+              console.log(dataGA);
             });
 
+            UserService.GetMailChimpCommunityData().then(function (dataMC) {
+              console.log(dataMC);
+            });
         }
 
         initController();

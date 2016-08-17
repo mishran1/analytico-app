@@ -298,7 +298,7 @@
                                             CPA: row[5]*1
                                         })
                                     });
-                                    UserService.SetCommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
+                                    UserService.SetGACommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
                                         console.log(status);
                                     });
                                 })

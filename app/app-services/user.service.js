@@ -14,17 +14,23 @@
         service.Create = Create;
         service.Update = Update;
         service.Delete = Delete;
-        service.GetCommunityData = GetCommunityData;
-        service.SetCommunityData = SetCommunityData;
+        service.GetGACommunityData = GetGACommunityData;
+        service.SetGACommunityData = SetGACommunityData;
+        service.GetMailChimpCommunityData = GetMailChimpCommunityData;
+
 
         return service;
 
-        function GetCommunityData() {
-            return $http.get('/api/users/community').then(handleSuccess, handleError);
+        function GetGACommunityData() {
+            return $http.get('/api/users/gacommunity').then(handleSuccess, handleError);
         }
 
-        function SetCommunityData(id, dataGA) {
-            return $http.put('/api/users/community/' + id, dataGA).then(handleSuccess, handleError);
+        function SetGACommunityData(id, dataGA) {
+            return $http.put('/api/users/gacommunity/' + id, dataGA).then(handleSuccess, handleError);
+        }
+
+        function GetMailChimpCommunityData() {
+            return $http.get('/api/users/mccommunity').then(handleSuccess, handleError);
         }
 
         function GetCurrent() {
