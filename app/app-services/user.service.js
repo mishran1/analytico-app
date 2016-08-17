@@ -29,8 +29,8 @@
             return $http.put('/api/users/setGAcommunity/' + gaid, dataGA).then(handleSuccess, handleError);
         }
 
-        function GetMailChimpCommunityData() {
-            return $http.get('/api/users/mccommunity').then(handleSuccess, handleError);
+        function GetMailChimpCommunityData(userid) {
+            return $http.put('/api/users/mccommunity/' + userid).then(handleSuccess, handleError);
         }
 
         function GetCurrent() {

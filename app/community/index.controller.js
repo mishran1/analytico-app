@@ -16,6 +16,67 @@
         {
             $rootScope.flag = '1';
             $rootScope.flagH = '1';
+
+            UserService.GetCurrent().then(function (user) {
+                UserService.GetMailChimpCommunityData(user.username).then(function (dataMC) {
+                    console.log(dataMC);
+                    console.log(user.dataMC);
+                    var click_rates = [];
+                    var open_rates = [];
+                    var names = [];
+                    user.dataMC[2].obj3.forEach(function(row, i) {
+                      click_rates.push(row.click_rate);
+                      open_rates.push(row.open_rate);
+                      names.push(row.title);
+                    });
+
+                    Highcharts.chart('container1', {
+                        title: {
+                          text: 'Engagement Analysis'
+                        },
+                        xAxis: {
+                          categories: names
+                        },
+                        labels: {
+                            items: [{
+                                html: 'Total fruit consumption',
+                                style: {
+                                    left: '50px',
+                                    top: '18px',
+                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+                                }
+                            }]
+                        },
+                        credits: {
+                          enabled: false
+                        },
+                        yAxis: {
+                         plotLines: [{
+                           color: 'blue',
+                           width: 2,
+                           value: dataMC[0].avgClickRate,
+                           dashStyle: 'longdashdot'              
+                         },{
+                           color: 'red',
+                           width: 2,
+                           value: dataMC[0].avgOpenRate,
+                           dashStyle: 'longdashdot'              
+                         }]
+                        },
+                                                series: [{
+                            type: 'column',
+                            name: 'Click Rate',
+                            data: click_rates
+                        }, {
+                            type: 'column',
+                            name: 'Open Rate',
+                            data: open_rates
+                        }]
+                    });
+                });
+            });
+
+
             gapi.analytics.ready(function() {
                 /**
                 * Authorize the user immediately if the user has already granted access.

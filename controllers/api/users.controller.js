@@ -11,7 +11,7 @@ router.post('/register', registerUser);
 router.get('/current', getCurrentUser);
 router.put('/getGAcommunity/:gaid', getGACommunityData);
 router.put('/setGAcommunity/:dataGA', setGACommunityData);
-router.get('/mccommunity', getMailChimpCommunityData);
+router.put('/mccommunity/:apiKey', getMailChimpCommunityData);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 
@@ -39,7 +39,7 @@ function setGACommunityData(req, res) {
 }
 
 function getMailChimpCommunityData(req, res) {
-    userService.getMailChimpCommunity()
+    userService.getMailChimpCommunity(req.params.userid)
         .then(function (dataMC) {
             res.send(dataMC);
         })

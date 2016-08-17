@@ -73,11 +73,11 @@ function getGACommunity(gaid) {
     return deferred.promise;
 }
 
-function getMailChimpCommunity() {
+function getMailChimpCommunity(userid) {
     var deferred = Q.defer();
 
     db.users.aggregate([
-        {   $match: { username: { $ne: "nish" } } },
+        {   $match: { username: { $ne: userid } } },
         {   $unwind: "$dataMC"  },
         {   $unwind: "$dataMC.obj3"     },
         { $group: {
