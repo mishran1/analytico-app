@@ -124,6 +124,7 @@ function getMC(apiKey) {
                             subs = subs + row.imports + row.optins;
                             monthly.push([row.month, row.imports + row.optins]);
                         });
+                        monthly.sort();
                         top.push({
                                 name: map[row.list_id],
                                 y: subs,

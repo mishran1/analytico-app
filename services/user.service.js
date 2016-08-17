@@ -28,14 +28,14 @@ service.getMailChimpCommunity = getMailChimpCommunity;
 
 module.exports = service;
 
-function setGACommunity(id, dataGA) {
+function setGACommunity(gaid, dataGA) {
     var deferred = Q.defer();
 
     var set = {
         dataGA: dataGA,
     }
     db.Community.update(
-        { _id: id},
+        { _id: gaid},
         { $set: set },
         { upsert: true },
         function (err, doc) {
@@ -47,11 +47,11 @@ function setGACommunity(id, dataGA) {
     return deferred.promise;
 }
 
-function getGACommunity() {
+function getGACommunity(gaid) {
     var deferred = Q.defer();
 
     db.Community.aggregate([
-        {   $match: { _id: { $ne: "nish" } } },
+        {   $match: { _id: { $ne: gaid } } },
         {   $unwind: "$dataGA"  },
         { $group: {
             _id: "$dataGA.day",

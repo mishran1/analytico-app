@@ -18,7 +18,8 @@ router.delete('/:_id', deleteUser);
 module.exports = router;
 
 function getGACommunityData(req, res) {
-    userService.getGACommunity()
+
+    userService.getGACommunity(req.params.gaid)
         .then(function (dataGA) {
             res.send(dataGA);
         })

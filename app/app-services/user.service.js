@@ -21,12 +21,12 @@
 
         return service;
 
-        function GetGACommunityData() {
-            return $http.get('/api/users/gacommunity').then(handleSuccess, handleError);
+        function GetGACommunityData(gaid) {
+            return $http.put('/api/users/getGAcommunity/' + gaid).then(handleSuccess, handleError);
         }
 
-        function SetGACommunityData(id, dataGA) {
-            return $http.put('/api/users/gacommunity/' + id, dataGA).then(handleSuccess, handleError);
+        function SetGACommunityData(gaid, dataGA) {
+            return $http.put('/api/users/setGAcommunity/' + gaid, dataGA).then(handleSuccess, handleError);
         }
 
         function GetMailChimpCommunityData() {
