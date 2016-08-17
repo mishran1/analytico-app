@@ -16,6 +16,7 @@
                 }
                 else {
                     $rootScope.flag = '1';
+                    $rootScope.flagC = '1';
                     let dataGA;
                     let dataMC;
                     var hide = [];

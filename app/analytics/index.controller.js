@@ -197,6 +197,7 @@
         }
         else {
             $rootScope.flagH = '1';
+            $rootScope.flagC = '1';
             initController();
             gapi.analytics.ready(function() {
 
