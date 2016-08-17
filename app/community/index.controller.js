@@ -143,165 +143,91 @@
 
                     // Render all the of charts for this view.
                     UserService.GetGACommunityData(data.ids).then(function (dataGA) {
-                        console.log(dataGA);
-                        renderWeekOverWeekChart(data.ids);
-                        renderYearOverYearChart(data.ids);
-                        renderTopBrowsersChart(data.ids);
-                        renderTopCountriesChart(data.ids);
+                        renderAOV(data.ids, dataGA);
                     });
                 });
 
-
-
-                /**
-                * Draw the a chart.js line chart with data from the specified view that
-                * overlays session data for the current week over session data for the
-                * previous week.
-                */
-                function renderWeekOverWeekChart(ids) {
-
-                    // Adjust `now` to experiment with different days, for testing only...
-                    var now = moment(); // .subtract(3, 'day');
-
-                    var thisWeek = query({
-                      'ids': ids,
-                      'dimensions': 'ga:date,ga:nthDay',
-                      'metrics': 'ga:sessions',
-                      'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
-                      'end-date': moment(now).format('YYYY-MM-DD')
-                    });
-
-                    var lastWeek = query({
-                      'ids': ids,
-                      'dimensions': 'ga:date,ga:nthDay',
-                      'metrics': 'ga:sessions',
-                      'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
-                          .format('YYYY-MM-DD'),
-                      'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
-                          .format('YYYY-MM-DD')
-                    });
-
-                    Promise.all([thisWeek, lastWeek]).then(function(results) {
-
-                        var data1 = results[0].rows.map(function(row) { return +row[2]; });
-                        var data2 = results[1].rows.map(function(row) { return +row[2]; });
-                        var labels = results[1].rows.map(function(row) { return +row[0]; });
-
-                        labels = labels.map(function(label) {
-                            return moment(label, 'YYYYMMDD').format('ddd');
-                        });
-
-
-                        Highcharts.chart('container1', {
-
-                            chart: {
-                              type: 'areaspline'
+                // Set the theme
+                    Highcharts.theme = {
+                        colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+                                 '#FF9655', '#FFF263', '#6AF9C4'],
+                        chart: {
+                            backgroundColor: {
+                                linearGradient: [0, 0, 500, 500],
+                                stops: [
+                                    [0, 'rgb(255, 255, 255)'],
+                                    [1, 'rgb(255, 250, 250)']
+                                ]
                             },
+                        },
+                        title: {
+                            style: {
+                                color: '#000',
+                                font: 'bold 16px "Avenir", Verdana, sans-serif'
+                            }
+                        },
+                        subtitle: {
+                            style: {
+                                color: '#666666',
+                                font: 'bold 12px "Avenir", Verdana, sans-serif'
+                            }
+                        },
 
-                            title: {
-                              text: ''
+                        legend: {
+                            itemStyle: {
+                                font: '9pt Avenir, Verdana, sans-serif',
+                                color: 'black'
                             },
+                            itemHoverStyle:{
+                                color: 'black'
+                            }   
+                        }
+                    };
 
-                            legend: {
-                              layout: 'vertical',
-                              align: 'left',
-                              verticalAlign: 'top',
-                              x: 150,
-                              y: 100,
-                              floating: true,
-                              borderWidth: 1,
-                              backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                            },
-
-                            xAxis: {
-                              categories: labels
-                            },
-
-                            yAxis: {
-                              title: {
-                                  text: 'Users'
-                              }
-                            },
-
-                            credits: {
-                              enabled: false
-                            },
-
-                            tooltip: {
-                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                            },
-
-                            plotOptions: {
-                              areaspline: {
-                                  fillOpacity: 0.5
-                              }
-                            },
-
-                            series: [{
-                              name: 'Last Week',
-                              data: data2
-                            }, {
-                              name: 'This Week',
-                              data: data1
-                            }]
-
-                        });
-                    });
-                }
-
+                    // Apply the theme
+                    Highcharts.setOptions(Highcharts.theme);
 
                 /**
                 * Draw the a chart.js bar chart with data from the specified view that
                 * overlays session data for the current year over session data for the
                 * previous year, grouped by month.
                 */
-                function renderYearOverYearChart(ids) {
+                function renderAOV(ids, dataGA) {
 
                     // Adjust `now` to experiment with different days, for testing only...
                     var now = moment(); // .subtract(3, 'day');
 
-                    var thisYear = query({
+                    var thisMonth = query({
                       'ids': ids,
-                      'dimensions': 'ga:month,ga:nthMonth',
-                      'metrics': 'ga:users',
-                      'start-date': moment(now).date(1).month(0).format('YYYY-MM-DD'),
+                      'dimensions': 'ga:day',
+                      'metrics': 'ga:revenuePerTransaction',
+                      'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
                       'end-date': moment(now).format('YYYY-MM-DD')
                     });
 
-                    var lastYear = query({
-                      'ids': ids,
-                      'dimensions': 'ga:month,ga:nthMonth',
-                      'metrics': 'ga:users',
-                      'start-date': moment(now).subtract(1, 'year').date(1).month(0)
-                          .format('YYYY-MM-DD'),
-                      'end-date': moment(now).date(1).month(0).subtract(1, 'day')
-                          .format('YYYY-MM-DD')
-                    });
 
-                    Promise.all([thisYear, lastYear]).then(function(results) {
-                        var data1 = results[0].rows.map(function(row) { return +row[2]; });
-                        var data2 = results[1].rows.map(function(row) { return +row[2]; });
-                        var labels = ['Jan','Feb','Mar','Apr','May','Jun',
-                                    'Jul','Aug','Sep','Oct','Nov','Dec'];
+                    thisMonth.then(function(results) {
+                        var data1 = results.rows.map(function(row) { return +row[1]; });
+                        var data2 = dataGA.map(function (row) { return +row.avgAOV; });
+                        var labels = dataGA.map(function (row) { return row._id; });
 
                         // Ensure the data arrays are at least as long as the labels array.
                         // Chart.js bar charts don't (yet) accept sparse datasets.
                         for (var i = 0, len = labels.length; i < len; i++) {
                             if (data1[i] === undefined) data1[i] = null;
-                            if (data2[i] === undefined) data2[i] = null;
                         }
 
                         var data = {
                             labels : labels,
                             datasets : [
                               {
-                                label: 'Last Year',
+                                label: 'Last Month',
                                 fillColor : 'rgba(220,220,220,0.5)',
                                 strokeColor : 'rgba(220,220,220,1)',
                                 data : data2
                               },
                               {
-                                label: 'This Year',
+                                label: 'This Month',
                                 fillColor : 'rgba(151,187,205,0.5)',
                                 strokeColor : 'rgba(151,187,205,1)',
                                 data : data1
@@ -313,13 +239,7 @@
                         Highcharts.chart('container2', {
 
                           chart: {
-                                type: 'column',
-                                options3d: {
-                                    enabled: true,
-                                    alpha: 10,
-                                    beta: 25,
-                                    depth: 70
-                                }
+                                type: 'areaspline'
                             },
 
                           title: {
@@ -333,24 +253,24 @@
                           },
 
                           xAxis: {
-                            categories: Highcharts.getOptions().lang.shortMonths
+                            categories: labels
                             },
 
                           yAxis: {
                               title: {
-                                  text: 'Sessions'
+                                  text: 'AOV'
                               }
                           },
 
                           tooltip: {
-                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                              pointFormat: '{series.name}: <b>{point:.1f}</b>'
                           },
 
                           series: [{
-                              name: 'Last Year',
+                              name: 'Last Month',
                               data: data2
                           }, {
-                              name: 'This Year',
+                              name: 'This Month',
                               data: data1
                           }]
 
@@ -359,172 +279,6 @@
                     })
                     .catch(function(err) {
                         console.error(err.stack);
-                    });
-                }
-
-
-                /**
-                * Draw the a chart.js doughnut chart with data from the specified view that
-                * show the top 5 browsers over the past seven days.
-                */
-                function renderTopBrowsersChart(ids) {
-
-                    query({
-                      'ids': ids,
-                      'dimensions': 'ga:browser',
-                      'metrics': 'ga:pageviews',
-                      'sort': '-ga:pageviews',
-                      'start-date': dateRange['start-date'],
-                      'end-date': dateRange['end-date'],
-                      'max-results': 5
-                    })
-                    .then(function(response) {
-
-                        var data = [];
-
-                        response.rows.forEach(function(row, i) {
-                        data.push({ name: row[0], y: +row[1] });
-                        });
-
-                        Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
-                          return {
-                              radialGradient: {
-                                  cx: 0.5,
-                                  cy: 0.3,
-                                  r: 0.7
-                              },
-                              stops: [
-                                  [0, color],
-                                  [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-                              ]
-                          };
-                        });
-
-
-                        Highcharts.chart('container3', {
-
-                          chart: {
-                            plotBackgroundColor: null,
-                            plotBorderWidth: null,
-                            plotShadow: false,
-                            type: 'pie'
-                          },
-
-                          title: {
-                              text: ''
-                          },
-
-                          tooltip: {
-                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                          },
-
-                          plotOptions: {
-                              pie: {
-                                  allowPointSelect: true,
-                                  cursor: 'pointer',
-                                  dataLabels: {
-                                      enabled: true,
-                                      format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                      style: {
-                                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                      },
-                                      connectorColor: 'silver'
-                                  }
-                              }
-                          },
-
-                          credits: {
-                              enabled: false
-                          },
-
-                          series: [{
-                              name: 'Browsers',
-                              data: data
-                          }]
-
-                        });
-
-
-                    });
-
-                }
-
-
-                /**
-                * Draw the a chart.js doughnut chart with data from the specified view that
-                * compares sessions from mobile, desktop, and tablet over the past seven
-                * days.
-                */
-                function renderTopCountriesChart(ids) {
-                    query({
-                      'ids': ids,
-                      'dimensions': 'ga:country',
-                      'metrics': 'ga:sessions',
-                      'sort': '-ga:sessions',
-                      'start-date': dateRange['start-date'],
-                      'end-date': dateRange['end-date'],
-                      'max-results': 5
-                    })
-                    .then(function(response) {
-
-                        var data = [];
-
-                        response.rows.forEach(function(row, i) {
-                            data.push({
-                              name: row[0],
-                              y: +row[1]
-                            });
-                        });
-
-
-
-                        Highcharts.chart('container4', {
-
-                          chart: {
-                              type: 'pie',
-                              options3d: {
-                                  enabled: true,
-                                  alpha: 45
-                              }
-                          },
-
-                          title: {
-                              text: ''
-                          },
-
-                          tooltip: {
-                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                          },
-
-                          credits: {
-                              enabled: false
-                          },
-
-                          plotOptions: {
-                              pie: {
-                                  innerSize: 100,
-                                  depth: 45,
-                                  allowPointSelect: true,
-                                  cursor: 'pointer',
-                                  dataLabels: {
-                                      enabled: true,
-                                      format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                      style: {
-                                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                      },
-                                      connectorColor: 'silver'
-                                  }
-                              }
-                          },
-
-                          series: [{
-                              name: 'Sessions',
-                              data: data
-                          }]
-
-                        });
-
-
                     });
                 }
 
