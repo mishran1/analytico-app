@@ -8,6 +8,23 @@ body {
     width: 100%;
 }
 
+.col-md-5 {
+    margin: 40px;
+}
+
+.row-centered {
+    text-align: center;
+}
+
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
 /* NAVIGATION */
 
 .flash-message {
@@ -56,4 +73,10 @@ form {
 }
 .gridster {
     border: 1px solid #ccc;
+}
+
+.shadow {
+    -moz-box-shadow:    2px 2px 3px 4px #ccc;
+    -webkit-box-shadow: 2px 2px 3px 4px #ccc;
+    box-shadow:         2px 2px 3px 4px #ccc;
 }

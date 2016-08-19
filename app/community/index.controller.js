@@ -6,6 +6,42 @@
         .controller('Community.IndexController', Controller)
 
     function Controller(UserService, $scope, $rootScope, $window) {
+        // Set the theme
+        Highcharts.theme = {
+            colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+                     '#FF9655', '#FFF263', '#6AF9C4'],
+            chart: {
+                backgroundColor: 'white',
+            },
+            title: {
+                style: {
+                    color: '#000',
+                    font: 'bold 16px "Avenir", Verdana, sans-serif'
+                }
+            },
+            subtitle: {
+                style: {
+                    color: '#666666',
+                    font: 'bold 12px "Avenir", Verdana, sans-serif'
+                }
+            },
+            lang: {
+                thousandsSep: ','
+            },
+            legend: {
+                itemStyle: {
+                    font: '9pt Avenir, Verdana, sans-serif',
+                    color: 'black'
+                },
+                itemHoverStyle:{
+                    color: 'black'
+                }   
+            }
+        };
+
+        // Apply the theme
+        Highcharts.setOptions(Highcharts.theme);
+
         // For loading Google Analytics
         $window.location.href = '/app/#/community';
         if ($rootScope.flagC == '1') {
@@ -18,8 +54,8 @@
             $rootScope.flagH = '1';
 
             UserService.GetCurrent().then(function (user) {
-                UserService.GetMailChimpCommunityData(user.username).then(function (dataMC) {
-                    console.log(dataMC);
+                UserService.GetMailChimpCommunityData(user.username).then(function (avgDataMC) {
+                    console.log(avgDataMC);
                     console.log(user.dataMC);
                     var click_rates = [];
                     var open_rates = [];
@@ -31,46 +67,96 @@
                     });
 
                     Highcharts.chart('container1', {
+                        chart: {
+                          zoomType: 'xy'
+                        },
                         title: {
-                          text: 'Engagement Analysis'
+                          text: 'MailChimp Engagement'
                         },
-                        xAxis: {
-                          categories: names
+                        subtitle: {
+                          text: 'Campaign Open Rates, Click Rates, and Averages'
                         },
-                        labels: {
-                            items: [{
-                                html: 'Total fruit consumption',
-                                style: {
-                                    left: '50px',
-                                    top: '18px',
-                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                                }
-                            }]
+                        xAxis: [{
+                          categories: names,
+                          crosshair: true
+                        }],
+                        yAxis: [{
+                          // Primary yAxis
+                          labels: {
+                            format: '{value}%',
+                            style: {
+                              color: Highcharts.getOptions().colors[0]
+                            }
+                          },
+                          plotLines: [{
+                            value: avgDataMC[0].avgOpenRate,
+                              color: Highcharts.getOptions().colors[0],
+                              dashStyle: 'shortdash',
+                              width: 2,
+                              zIndex: -10,
+                              label: {
+                                  text: 'Average Open Rate'
+                              }
+                          }],
+                          title: {
+                            text: 'Open Rate',
+                            style: {
+                              color: Highcharts.getOptions().colors[0]
+                            }
+                          },
+                        },
+                        {
+                          // Secondary yAxis
+                          plotLines: [{
+                              value: avgDataMC[0].avgClickRate,
+                              color: Highcharts.getOptions().colors[1],
+                              dashStyle: 'shortdash',
+                              width: 2,
+                              zIndex: 10,
+                              label: {
+                                  text: 'Average Click Rate'
+                              }
+                          }],
+                          title: {
+                            text: 'Click Rate',
+                            style: {
+                              color: Highcharts.getOptions().colors[1]
+                            }
+                          },
+                          labels: {
+                            format: '{value}%',
+                            style: {
+                              collor: Highcharts.getOptions().colors[1]
+                            }
+                          },
+                          opposite: true,
+
+                        }],
+                        tooltip: {
+                          shared: true
                         },
                         credits: {
                           enabled: false
                         },
-                        yAxis: {
-                         plotLines: [{
-                           color: 'blue',
-                           width: 2,
-                           value: dataMC[0].avgClickRate,
-                           dashStyle: 'longdashdot'              
-                         },{
-                           color: 'red',
-                           width: 2,
-                           value: dataMC[0].avgOpenRate,
-                           dashStyle: 'longdashdot'              
-                         }]
+                        series: [{
+                          name: 'Open Rate',
+                          type: 'column',
+                          color: Highcharts.getOptions().colors[0],
+                          yAxis: 0,
+                          data: open_rates,
+                          tooltip: {
+                            valueSuffix: '%',
+                          }
                         },
-                                                series: [{
-                            type: 'column',
-                            name: 'Click Rate',
-                            data: click_rates
-                        }, {
-                            type: 'column',
-                            name: 'Open Rate',
-                            data: open_rates
+                        {
+                          name: 'Click Rate',
+                          type: 'column',
+                          color: Highcharts.getOptions().colors[1],
+                          yAxis: 1,
+                          data: click_rates,
+                          tooltip: {
+                            valueSuffix: '%',
+                          }
                         }]
                     });
                 });
@@ -208,46 +294,6 @@
                     });
                 });
 
-                // Set the theme
-                    Highcharts.theme = {
-                        colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
-                                 '#FF9655', '#FFF263', '#6AF9C4'],
-                        chart: {
-                            backgroundColor: {
-                                linearGradient: [0, 0, 500, 500],
-                                stops: [
-                                    [0, 'rgb(255, 255, 255)'],
-                                    [1, 'rgb(255, 250, 250)']
-                                ]
-                            },
-                        },
-                        title: {
-                            style: {
-                                color: '#000',
-                                font: 'bold 16px "Avenir", Verdana, sans-serif'
-                            }
-                        },
-                        subtitle: {
-                            style: {
-                                color: '#666666',
-                                font: 'bold 12px "Avenir", Verdana, sans-serif'
-                            }
-                        },
-
-                        legend: {
-                            itemStyle: {
-                                font: '9pt Avenir, Verdana, sans-serif',
-                                color: 'black'
-                            },
-                            itemHoverStyle:{
-                                color: 'black'
-                            }   
-                        }
-                    };
-
-                    // Apply the theme
-                    Highcharts.setOptions(Highcharts.theme);
-
                 /**
                 * Draw the a chart.js bar chart with data from the specified view that
                 * overlays session data for the current year over session data for the
@@ -278,60 +324,43 @@
                             if (data1[i] === undefined) data1[i] = null;
                         }
 
-                        var data = {
-                            labels : labels,
-                            datasets : [
-                              {
-                                label: 'Last Month',
-                                fillColor : 'rgba(220,220,220,0.5)',
-                                strokeColor : 'rgba(220,220,220,1)',
-                                data : data2
-                              },
-                              {
-                                label: 'This Month',
-                                fillColor : 'rgba(151,187,205,0.5)',
-                                strokeColor : 'rgba(151,187,205,1)',
-                                data : data1
-                              }
-                            ]
-                        };
-
-
                         Highcharts.chart('container2', {
-
                           chart: {
-                                type: 'areaspline'
-                            },
-
+                            type: 'areaspline',
+                            zoomType: 'xy'
+                          },
                           title: {
-                                text: ''
+                            text: 'Average Order Value (AOV)'
                           },
-
-                          plotOptions: {
-                                column: {
-                                    depth: 15
-                                }
+                          subtitle: {
+                            text: 'E-Commerce Revenue Per Transaction'
                           },
-
                           xAxis: {
-                            categories: labels
-                            },
+                            categories: labels,
+                            title: {
+                              enabled: true,
+                              text: 'Day of Month',
+                            }
+                          },
 
                           yAxis: {
                               title: {
                                   text: 'AOV'
-                              }
+                              },
                           },
 
                           tooltip: {
-                              pointFormat: '{series.name}: <b>{point:.1f}</b>'
+                              pointFormat: '{series.name}: <b>${point.y:.2f}</b><br>',
+                              shared: true
                           },
-
+                          credits: {
+                            enabled: false
+                          },
                           series: [{
-                              name: 'Last Month',
+                              name: 'Community',
                               data: data2
                           }, {
-                              name: 'This Month',
+                              name: 'You',
                               data: data1
                           }]
 
