@@ -19,6 +19,7 @@ function getMC(apiKey) {
         var rid = [];               //List IDs
         var map = {};
         var MCdata = [];
+        var MCreports;
 
         try {
             var mailchimp = new Mailchimp(apiKey);
@@ -30,7 +31,10 @@ function getMC(apiKey) {
             var data = new Promise(function(resolve, reject) {
                     mailchimp.request({
                     method : 'get',
-                    path : 'lists'
+                    path : 'lists',
+                    query : {
+                        count  : 30,
+                    }
                 }, function (err,result) {
                     if (err) {
                         reject(err);
@@ -46,7 +50,10 @@ function getMC(apiKey) {
             var data1 = new Promise(function(resolve, reject) {
                     mailchimp.request({
                     method : 'get',
-                    path : 'reports'
+                    path : 'reports',
+                    query : {
+                        count  : 30,
+                    }
                 }, function (err,result) {
                     if (err) {
                         reject(err);
@@ -54,8 +61,7 @@ function getMC(apiKey) {
 
                     for (var i = 0; i < result.reports.length; i++) {
                         rid.push({
-                            id: result.reports[i].id,
-                            title: result.reports[i].campaign_title
+                            report: result.reports[i]
                         });
                     }
                     resolve(rid);
@@ -81,15 +87,7 @@ function getMC(apiKey) {
                     });
             }
 
-            result[1].forEach(function (row, i){
-                hist_req.push({
-                    method: 'get',
-                    path: '/reports/{report_id}/',
-                    path_params : {
-                        report_id : row.id
-                    }
-                });
-            });
+            MCreports = result[1];
 
             for (var i in result[0]) {
                 hist_req.push({
@@ -137,16 +135,6 @@ function getMC(apiKey) {
                             data: monthly
                         });
                     }
-                    else if ("campaign_title" in row) {
-                        var open_rate = 0;
-                        var click_rate = 0;
-
-                        campaign.push({
-                            title : row.campaign_title,
-                            open_rate : row.opens.open_rate * 100,
-                            click_rate : row.clicks.click_rate * 100
-                        });
-                    }
                     else if ("activity" in row){
                         var net = 0;
                         var day = [];
@@ -168,6 +156,14 @@ function getMC(apiKey) {
                     }
                 });
 
+                for (var i = 0; i < MCreports.length; i++) {
+                    campaign.push({
+                        title : MCreports[i].report.campaign_title,
+                        open_rate : MCreports[i].report.opens.open_rate * 100,
+                        click_rate : MCreports[i].report.clicks.click_rate * 100
+                    });
+                } 
+
                 MCdata.push({ obj1: top});
                 MCdata.push({ obj2: down});
                 MCdata.push({ obj3: campaign});
@@ -175,7 +171,6 @@ function getMC(apiKey) {
                 MCdata.push({ obj5: down1});
 
                 deferred.resolve(MCdata);
-
             }, function(err) {
                 console.log(err);
             });

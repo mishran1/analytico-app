@@ -15,6 +15,7 @@
                     $window.location.reload();
                 }
                 else {
+                    console.log($rootScope.mcKey);
                     $rootScope.flag = '1';
                     $rootScope.flagC = '1';
                     let dataGA;
@@ -272,11 +273,11 @@
                                 renderYearOverYearChart(data.ids);
                                 renderTopBrowsersChart(data.ids);
                                 renderTopCountriesChart(data.ids);
-                                getCommunityData(data.ids);
+                                queryCommunityData(data.ids);
                             });
                             
 
-                            function getCommunityData(ids) {
+                            function queryCommunityData(ids) {
                                 var now = moment(); // .subtract(3, 'day');
                                 var dataGA = [];
 
@@ -776,9 +777,11 @@
 
                     UserService.GetCurrent().then(function (user) {
                         vm.user = user;
+                        /*
                         if (user.dash) {
                             $scope.dashboard=user.dash;
                         }
+                        */
                         if (user.apiKey) {
                             dataMC = user.dataMC;
                             dataMC[2].obj3.forEach(function(row, i) {

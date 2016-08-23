@@ -91,9 +91,9 @@
                           plotLines: [{
                             value: avgDataMC[0].avgOpenRate,
                               color: Highcharts.getOptions().colors[0],
-                              dashStyle: 'shortdash',
+                              dashStyle: 'shortdot',
                               width: 2,
-                              zIndex: -10,
+                              zIndex: 10,
                               label: {
                                   text: 'Average Open Rate'
                               }
@@ -110,7 +110,7 @@
                           plotLines: [{
                               value: avgDataMC[0].avgClickRate,
                               color: Highcharts.getOptions().colors[1],
-                              dashStyle: 'shortdash',
+                              dashStyle: 'shortdot',
                               width: 2,
                               zIndex: 10,
                               label: {
@@ -133,7 +133,11 @@
 
                         }],
                         tooltip: {
-                          shared: true
+                          pointFormat: '{series.name}: <b>{point.y:.2f}%</b><br>',
+                          shared: true,
+                          positioner: function () {
+                            return { x: 180, y: 50 };
+                          }
                         },
                         credits: {
                           enabled: false
@@ -291,13 +295,12 @@
                     // Render all the of charts for this view.
                     UserService.GetGACommunityData(data.ids).then(function (dataGA) {
                         renderAOV(data.ids, dataGA);
+                        renderSessions(data.ids, dataGA);
                     });
                 });
 
                 /**
-                * Draw the a chart.js bar chart with data from the specified view that
-                * overlays session data for the current year over session data for the
-                * previous year, grouped by month.
+                * Draw the overlayed 30-day AOV data for current user over community data.
                 */
                 function renderAOV(ids, dataGA) {
 
@@ -324,7 +327,7 @@
                             if (data1[i] === undefined) data1[i] = null;
                         }
 
-                        Highcharts.chart('container2', {
+                        Highcharts.chart('container3', {
                           chart: {
                             type: 'areaspline',
                             zoomType: 'xy'

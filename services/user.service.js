@@ -88,7 +88,6 @@ function getMailChimpCommunity(userid) {
         },
     ], function (err, result) {
         if (err) deferred.reject(err);
-        console.log(result);
         deferred.resolve(result);
     });
 
@@ -227,7 +226,6 @@ function update(_id, userParam) {
                         });
 
                         getData.then(function(result) {
-
                             // fields to update
                             var set = {
                                 firstName: userParam.firstName,
