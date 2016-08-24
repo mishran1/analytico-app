@@ -83,7 +83,7 @@ function getMailChimpCommunity(userid) {
         { $group: {
             _id: null,
             avgOpenRate: {  $avg:   "$dataMC.obj3.open_rate"    },
-            avgClickRate: { $avg:   "$dataMC.obj3.click_rate"   },
+            avgClickRate: { $avg:   "$dataMC.obj3.click_rate"   }
             }
         },
     ], function (err, result) {

@@ -55,8 +55,6 @@
 
             UserService.GetCurrent().then(function (user) {
                 UserService.GetMailChimpCommunityData(user.username).then(function (avgDataMC) {
-                    console.log(avgDataMC);
-                    console.log(user.dataMC);
                     var click_rates = [];
                     var open_rates = [];
                     var names = [];
@@ -296,6 +294,9 @@
                     UserService.GetGACommunityData(data.ids).then(function (dataGA) {
                         renderAOV(data.ids, dataGA);
                         renderSessions(data.ids, dataGA);
+                        renderCPA(data.ids, dataGA);
+                        renderCR(data.ids, dataGA);
+                        renderRevenue(data.ids, dataGA);
                     });
                 });
 
@@ -327,7 +328,7 @@
                             if (data1[i] === undefined) data1[i] = null;
                         }
 
-                        Highcharts.chart('container3', {
+                        Highcharts.chart('container2', {
                           chart: {
                             type: 'areaspline',
                             zoomType: 'xy'
@@ -369,6 +370,300 @@
 
                         });
 
+                    })
+                    .catch(function(err) {
+                        console.error(err.stack);
+                    });
+                }
+
+                /**
+                * Draw the overlayed 30-day session data for current user over community data.
+                */
+                function renderSessions(ids, dataGA) {
+
+                    // Adjust `now` to experiment with different days, for testing only...
+                    var now = moment(); // .subtract(3, 'day');
+
+                    var thisMonth = query({
+                      'ids': ids,
+                      'dimensions': 'ga:day',
+                      'metrics': 'ga:sessions',
+                      'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                      'end-date': moment(now).format('YYYY-MM-DD')
+                    });
+
+
+                    thisMonth.then(function(results) {
+                        var data1 = results.rows.map(function(row) { return +row[1]; });
+                        var data2 = dataGA.map(function (row) { return +row.avgSessions; });
+                        var labels = dataGA.map(function (row) { return row._id; });
+
+                        // Ensure the data arrays are at least as long as the labels array.
+                        // Chart.js bar charts don't (yet) accept sparse datasets.
+                        for (var i = 0, len = labels.length; i < len; i++) {
+                            if (data1[i] === undefined) data1[i] = null;
+                        }
+
+                        Highcharts.chart('container3', {
+                          chart: {
+                            type: 'areaspline',
+                            zoomType: 'xy'
+                          },
+                          title: {
+                            text: 'Session Analysis'
+                          },
+                          subtitle: {
+                            text: 'Number of Store Interactions'
+                          },
+                          xAxis: {
+                            categories: labels,
+                            title: {
+                              enabled: true,
+                              text: 'Day of Month',
+                            }
+                          },
+
+                          yAxis: {
+                              title: {
+                                  text: 'Sessions'
+                              },
+                          },
+
+                          tooltip: {
+                              pointFormat: '{series.name}: <b>{point.y}</b><br>',
+                              shared: true
+                          },
+                          credits: {
+                            enabled: false
+                          },
+                          series: [{
+                              name: 'Community',
+                              data: data2
+                          }, {
+                              name: 'You',
+                              data: data1
+                          }]
+                        });
+                    })
+                    .catch(function(err) {
+                        console.error(err.stack);
+                    });
+                }
+
+                /**
+                * Draw the overlayed 30-day CPA data for current user over community data.
+                */
+                function renderCPA(ids, dataGA) {
+
+                    // Adjust `now` to experiment with different days, for testing only...
+                    var now = moment(); // .subtract(3, 'day');
+
+                    var thisMonth = query({
+                      'ids': ids,
+                      'dimensions': 'ga:day',
+                      'metrics': 'ga:costPerTransaction',
+                      'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                      'end-date': moment(now).format('YYYY-MM-DD')
+                    });
+
+
+                    thisMonth.then(function(results) {
+                        var data1 = results.rows.map(function(row) { return +row[1]; });
+                        var data2 = dataGA.map(function (row) { return +row.avgCPA; });
+                        var labels = dataGA.map(function (row) { return row._id; });
+
+                        // Ensure the data arrays are at least as long as the labels array.
+                        // Chart.js bar charts don't (yet) accept sparse datasets.
+                        for (var i = 0, len = labels.length; i < len; i++) {
+                            if (data1[i] === undefined) data1[i] = null;
+                        }
+
+                        Highcharts.chart('container4', {
+                          chart: {
+                            type: 'areaspline',
+                            zoomType: 'xy'
+                          },
+                          title: {
+                            text: 'Cost Per Acquisition (CPA)'
+                          },
+                          subtitle: {
+                            text: ''
+                          },
+                          xAxis: {
+                            categories: labels,
+                            title: {
+                              enabled: true,
+                              text: 'Day of Month',
+                            }
+                          },
+
+                          yAxis: {
+                              title: {
+                                  text: 'Cost'
+                              },
+                          },
+
+                          tooltip: {
+                              pointFormat: '{series.name}: <b>${point.y:.2f}</b><br>',
+                              shared: true
+                          },
+                          credits: {
+                            enabled: false
+                          },
+                          series: [{
+                              name: 'Community',
+                              data: data2
+                          }, {
+                              name: 'You',
+                              data: data1
+                          }]
+                        });
+                    })
+                    .catch(function(err) {
+                        console.error(err.stack);
+                    });
+                }
+
+                /**
+                * Draw the overlayed 30-day CR data for current user over community data.
+                */
+                function renderCR(ids, dataGA) {
+
+                    // Adjust `now` to experiment with different days, for testing only...
+                    var now = moment(); // .subtract(3, 'day');
+
+                    var thisMonth = query({
+                      'ids': ids,
+                      'dimensions': 'ga:day',
+                      'metrics': 'ga:sessions, ga:transactions',
+                      'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                      'end-date': moment(now).format('YYYY-MM-DD')
+                    });
+
+                    thisMonth.then(function(results) {
+                        var data1 = results.rows.map(function(row) { return +row[2]/row[1]; });
+                        var data2 = dataGA.map(function (row) { return +row.avgCR; });
+                        var labels = dataGA.map(function (row) { return row._id; });
+
+                        // Ensure the data arrays are at least as long as the labels array.
+                        // Chart.js bar charts don't (yet) accept sparse datasets.
+                        for (var i = 0, len = labels.length; i < len; i++) {
+                            if (data1[i] === undefined) data1[i] = null;
+                        }
+
+                        Highcharts.chart('container5', {
+                          chart: {
+                            type: 'areaspline',
+                            zoomType: 'xy'
+                          },
+                          title: {
+                            text: 'Conversion Rate (CR)'
+                          },
+                          subtitle: {
+                            text: 'Number of Transactions Per Session'
+                          },
+                          xAxis: {
+                            categories: labels,
+                            title: {
+                              enabled: true,
+                              text: 'Day of Month',
+                            }
+                          },
+
+                          yAxis: {
+                              title: {
+                                  text: 'Conversion Rate'
+                              },
+                          },
+
+                          tooltip: {
+                              pointFormat: '{series.name}: <b>{point.y:.2f}%</b><br>',
+                              shared: true
+                          },
+                          credits: {
+                            enabled: false
+                          },
+                          series: [{
+                              name: 'Community',
+                              data: data2
+                          }, {
+                              name: 'You',
+                              data: data1
+                          }]
+                        });
+                    })
+                    .catch(function(err) {
+                        console.error(err.stack);
+                    });
+                }
+
+                /**
+                * Draw the overlayed 30-day revenue data for current user over community data.
+                */
+                function renderRevenue(ids, dataGA) {
+
+                    // Adjust `now` to experiment with different days, for testing only...
+                    var now = moment(); // .subtract(3, 'day');
+
+                    var thisMonth = query({
+                      'ids': ids,
+                      'dimensions': 'ga:day',
+                      'metrics': 'ga:transactionRevenue',
+                      'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                      'end-date': moment(now).format('YYYY-MM-DD')
+                    });
+
+                    thisMonth.then(function(results) {
+                        var data1 = results.rows.map(function(row) { return +row[1]; });
+                        var data2 = dataGA.map(function (row) { return +row.avgRev; });
+                        var labels = dataGA.map(function (row) { return row._id; });
+
+                        // Ensure the data arrays are at least as long as the labels array.
+                        // Chart.js bar charts don't (yet) accept sparse datasets.
+                        for (var i = 0, len = labels.length; i < len; i++) {
+                            if (data1[i] === undefined) data1[i] = null;
+                        }
+
+                        Highcharts.chart('container6', {
+                          chart: {
+                            type: 'areaspline',
+                            zoomType: 'xy'
+                          },
+                          title: {
+                            text: 'Transaction Revenue'
+                          },
+                          subtitle: {
+                            text: ''
+                          },
+                          xAxis: {
+                            categories: labels,
+                            title: {
+                              enabled: true,
+                              text: 'Day of Month',
+                            }
+                          },
+
+                          yAxis: {
+                              title: {
+                                  text: 'Revenue'
+                              },
+                          },
+
+                          tooltip: {
+                              pointFormat: '{series.name}: <b>${point.y:.2f}</b><br>',
+                              shared: true
+                          },
+                          credits: {
+                            enabled: false
+                          },
+                          series: [{
+                              name: 'Community',
+                              data: data2
+                          }, {
+                              name: 'You',
+                              data: data1
+                          }]
+                        });
                     })
                     .catch(function(err) {
                         console.error(err.stack);
