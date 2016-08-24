@@ -88,16 +88,6 @@
                   xAxis: {
                     categories: names
                   },
-                  labels: {
-                      items: [{
-                          html: 'Total fruit consumption',
-                          style: {
-                              left: '50px',
-                              top: '18px',
-                              color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                          }
-                      }]
-                  },
                   credits: {
                     enabled: false
                   },
