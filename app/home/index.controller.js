@@ -31,19 +31,16 @@
                     var chart4 = null;
                     var chart5 = null;
                     var chart6 = null;
+                    var chart7 = null;
+                    var chart8 = null;
                     var counter = 0;
+
                     // Set the theme
                     Highcharts.theme = {
                         colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
                                  '#FF9655', '#FFF263', '#6AF9C4'],
                         chart: {
-                            backgroundColor: {
-                                linearGradient: [0, 0, 500, 500],
-                                stops: [
-                                    [0, 'rgb(255, 255, 255)'],
-                                    [1, 'rgb(255, 250, 250)']
-                                ]
-                            },
+                            backgroundColor: 'white',
                         },
                         title: {
                             style: {
@@ -57,7 +54,19 @@
                                 font: 'bold 12px "Avenir", Verdana, sans-serif'
                             }
                         },
-
+                        xAxis: {
+                            labels: {
+                                style: {
+                                    font: "Avenir"
+                                }
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        lang: {
+                            thousandsSep: ','
+                        },
                         legend: {
                             itemStyle: {
                                 font: '9pt Avenir, Verdana, sans-serif',
@@ -86,52 +95,68 @@
                             widgets: [{
                                 col: 0,
                                 row: 0,
-                                sizeY: 1,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 0,
                                 name: "This Week vs Last Week"
                             }, {
                                 col: 2,
                                 row: 0,
-                                sizeY: 1,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 1,
                                 name: "This Year vs Last Year"
                             }, {
-                                col: 0,
-                                row: 3,
-                                sizeY: 1,
+                                col: 4,
+                                row: 0,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 2,
                                 name: "Top Browsers"
                             },{
-                                col: 2,
-                                row: 3,
-                                sizeY: 1,
+                                col: 0,
+                                row: 1,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 3,
                                 name: "Top Countries"
                             },{
-                                col: 0,
-                                row: 5,
+                                col: 2,
+                                row: 1,
                                 sizeY: 2,
                                 sizeX: 2,
                                 index: 4,
                                 name: "Mailing List Subscribers"
                             }, {
-                                col: 2,
-                                row: 7,
-                                sizeY: 1,
+                                col: 4,
+                                row: 1,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 5,
                                 name: "Engagement Analysis"
                             }, {
-                                col: 6,
-                                row: 7,
-                                sizeY: 1,
+                                col: 0,
+                                row: 2,
+                                sizeY: 2,
                                 sizeX: 2,
                                 index: 6,
                                 name: "Recent List Activity"
+                            },
+                            {
+                                col: 2,
+                                row: 2,
+                                sizeY: 2,
+                                sizeX: 2,
+                                index: 7,
+                                name: "Average Order Value"
+                            },
+                            {
+                                col: 4,
+                                row: 2,
+                                sizeY: 2,
+                                sizeX: 2,
+                                index: 8,
+                                name: "Conversion Rate"
                             }]
                     };
 
@@ -200,7 +225,11 @@
 
                                 renderTopBrowsersChart(gaid);
                                 renderTopCountriesChart(gaid);
-                                renderTopProductsChart(gaid);
+                                renderWeekOverWeekChart(gaid);
+                                renderYearOverYearChart(gaid);
+                                renderAOV(gaid);
+                                renderCR(gaid);
+                                render(gaid);
                             });
 
                             /**
@@ -256,7 +285,6 @@
                             })
                             .execute();
 
-
                             /**
                             * Update the activeUsers component, the Chartjs charts, and the dashboard
                             * title whenever the user changes the view.
@@ -273,39 +301,12 @@
                                 renderYearOverYearChart(data.ids);
                                 renderTopBrowsersChart(data.ids);
                                 renderTopCountriesChart(data.ids);
-                                queryCommunityData(data.ids);
+                                renderAOV(data.ids);
+                                renderCR(data.ids);
+                                render(data.ids);
                             });
                             
 
-                            function queryCommunityData(ids) {
-                                var now = moment(); // .subtract(3, 'day');
-                                var dataGA = [];
-
-                                var thisWeek = query({
-                                  'ids': ids,
-                                  'dimensions': 'ga:day',
-                                  'metrics': 'ga:sessions, ga:revenuePerTransaction, ga:transactionRevenue, ga:transactions, ga:costPerTransaction',
-                                  'start-date': moment(now).subtract(1, 'months').startOf("month").format('YYYY-MM-DD'),
-                                  'end-date': moment(now).subtract(1, 'months').endOf("month").format('YYYY-MM-DD')
-                                });
-
-                                thisWeek.then(function(result) {
-                                    result.rows.forEach(function(row, i) {
-                                        dataGA.push({
-                                            day: i+1,
-                                            sessions: row[1]*1,
-                                            AOV: row[2]*1,
-                                            CR: (row[4]/row[1])*100,
-                                            revenue: row[3]*1,
-                                            CPA: row[5]*1
-                                        })
-                                    });
-                                    UserService.SetGACommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
-                                        console.log(status);
-                                    });
-                                });
-
-                            }
 
 
                             /**
@@ -351,7 +352,8 @@
                                         Highcharts.chart('mc-container-0', {
 
                                             chart: {
-                                              type: 'areaspline'
+                                              type: 'areaspline',
+                                              zoomType: 'xy'
                                             },
 
                                             title: {
@@ -384,7 +386,8 @@
                                             },
 
                                             tooltip: {
-                                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                              pointFormat: '{series.name}: <b>{point.y}</b><br>',
+                                              shared: true
                                             },
 
                                             plotOptions: {
@@ -395,16 +398,18 @@
 
                                             series: [{
                                               name: 'Last Week',
-                                              data: data2
+                                              data: data2,
+                                              color: Highcharts.getOptions().colors[0]
                                             }, {
                                               name: 'This Week',
-                                              data: data1
+                                              data: data1,
+                                              color: Highcharts.getOptions().colors[1]
                                             }]
 
                                         });
                                     };
                                 counter++;
-                                if (counter == 4){
+                                if (counter == 7){
                                    resolve();
                                 }
                                 });
@@ -505,7 +510,8 @@
                                           },
 
                                           tooltip: {
-                                              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                              pointFormat: '{series.name}: <b>{point.y}</b><br>',
+                                              shared: true
                                           },
 
                                           series: [{
@@ -519,7 +525,7 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 4){
+                                if (counter == 7){
                                    resolve();
                                 }
 
@@ -553,28 +559,13 @@
                                     data.push({ name: row[0], y: +row[1] });
                                     });
 
-                                    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
-                                      return {
-                                          radialGradient: {
-                                              cx: 0.5,
-                                              cy: 0.3,
-                                              r: 0.7
-                                          },
-                                          stops: [
-                                              [0, color],
-                                              [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-                                          ]
-                                      };
-                                    });
-
-
                                     $scope.chart2 = function () {
                                         Highcharts.chart('mc-container-2', {
 
                                           chart: {
                                             plotBackgroundColor: null,
                                             plotBorderWidth: null,
-                                            plotShadow: false,
+                                            plotShadow: true,
                                             type: 'pie'
                                           },
 
@@ -613,7 +604,7 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 4){
+                                if (counter == 7){
                                    resolve();
                                 }
 
@@ -697,7 +688,209 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 4){
+                                if (counter == 7){
+                                   resolve();
+                                }
+                                });
+                            }
+
+                            /**
+                            * Draw the a chart.js line chart with data from the specified view that
+                            * overlays session data for the current week over session data for the
+                            * previous week.
+                            */
+                            function renderAOV(ids) {
+
+                                // Adjust `now` to experiment with different days, for testing only...
+                                var now = moment(); // .subtract(3, 'day');
+
+                                var thisWeek = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:date,ga:nthDay',
+                                  'metrics': 'ga:revenuePerTransaction',
+                                  'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                });
+
+                                var lastWeek = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:date,ga:nthDay',
+                                  'metrics': 'ga:revenuePerTransaction',
+                                  'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
+                                      .format('YYYY-MM-DD'),
+                                  'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
+                                      .format('YYYY-MM-DD')
+                                });
+
+                                Promise.all([thisWeek, lastWeek]).then(function(results) {
+
+                                    var data1 = results[0].rows.map(function(row) { return +row[2]; });
+                                    var data2 = results[1].rows.map(function(row) { return +row[2]; });
+                                    var labels = results[1].rows.map(function(row) { return +row[0]; });
+
+                                    labels = labels.map(function(label) {
+                                        return moment(label, 'YYYYMMDD').format('ddd');
+                                    });
+
+                                    $scope.chart7 = function () {
+                                        Highcharts.chart('mc-container-7', {
+
+                                            chart: {
+                                              type: 'areaspline',
+                                              zoomType: 'xy'
+                                            },
+
+                                            title: {
+                                              text: 'Average Order Value (AOV)'
+                                            },
+
+                                            xAxis: {
+                                                categories: labels,
+                                                title: {
+                                                    enabled: true,
+                                                    text: 'Day of Month',
+                                                }
+                                            },
+
+                                            yAxis: {
+                                              title: {
+                                                  text: 'Users'
+                                              }
+                                            },
+
+                                            credits: {
+                                              enabled: false
+                                            },
+
+                                            tooltip: {
+                                              pointFormat: '{series.name}: <b>${point.y}</b><br>',
+                                              shared: true
+                                            },
+
+                                            plotOptions: {
+                                              areaspline: {
+                                                  fillOpacity: 0.5
+                                              }
+                                            },
+
+                                            series: [{
+                                              name: 'Last Week',
+                                              data: data2,
+                                              color: Highcharts.getOptions().colors[0]
+                                            }, {
+                                              name: 'This Week',
+                                              data: data1,
+                                              color: Highcharts.getOptions().colors[1]
+                                            }]
+
+                                        });
+                                    };
+                                counter++;
+                                if (counter == 7){
+                                   resolve();
+                                }
+                                });
+                            }
+
+
+                            /**
+                            * Draw the a chart.js line chart with data from the specified view that
+                            * overlays session data for the current week over session data for the
+                            * previous week.
+                            */
+                            function renderCR(ids) {
+
+                                // Adjust `now` to experiment with different days, for testing only...
+                                var now = moment(); // .subtract(3, 'day');
+
+                                var thisMonth = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:day',
+                                  'metrics': 'ga:sessions, ga:transactions',
+                                  'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                });
+
+                                thisMonth.then(function(results) {
+                                    var data = results.rows.map(function(row) { return +row[2]*100/row[1]; });
+                                    var labels = results.rows.map(function (row) { return row[0]; });
+
+                                    $scope.chart8 = function () {
+                                        Highcharts.chart('mc-container-8', {
+
+                                            chart: {
+                                              type: 'areaspline',
+                                              zoomType: 'xy'
+                                            },
+
+                                            title: {
+                                              text: 'Conversion Rate'
+                                            },
+
+                                            xAxis: {
+                                                categories: labels,
+                                                title: {
+                                                    enabled: true,
+                                                    text: 'Day of Month',
+                                                }
+                                            },
+
+                                            yAxis: {
+                                              title: {
+                                                  text: 'Conversion Rate'
+                                              }
+                                            },
+
+                                            tooltip: {
+                                              pointFormat: '{series.name}: <b>{point.y:.2f}%</b><br>',
+                                              shared: true
+                                            },
+
+                                            plotOptions: {
+                                              areaspline: {
+                                                  fillOpacity: 0.5
+                                              }
+                                            },
+
+                                            series: [{
+                                              name: 'CR',
+                                              data: data,
+                                              color: Highcharts.getOptions().colors[0]
+                                            }]
+
+                                        });
+                                    };
+                                counter++;
+                                if (counter == 7){
+                                   resolve();
+                                }
+                                });
+                            }
+
+                            /**
+                            * Draw the a chart.js line chart with data from the specified view that
+                            * overlays session data for the current week over session data for the
+                            * previous week.
+                            */
+                            function renderRevenue(ids) {
+
+                                // Adjust `now` to experiment with different days, for testing only...
+                                var now = moment(); // .subtract(3, 'day');
+
+                                var thisMonth = query({
+                                  'ids': ids,
+                                  'dimensions': 'ga:day',
+                                  'metrics': 'ga:transactionRevenue',
+                                  'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
+                                  'end-date': moment(now).format('YYYY-MM-DD')
+                                });
+
+                                thisMonth.then(function(results) {
+                                    var data = results.rows.map(function(row) { return +row[2]*100/row[1]; });
+                                    var labels = results.rows.map(function (row) { return row[0]; });
+                                    console.log(results);
+                                counter++;
+                                if (counter == 7){
                                    resolve();
                                 }
                                 });
@@ -771,6 +964,8 @@
                         $scope.chart1();
                         $scope.chart2();
                         $scope.chart3();
+                        $scope.chart7();
+                        $scope.chart8();
                     }, function(err) {
                         console.log(err);
                     });
@@ -857,16 +1052,6 @@
                                     xAxis: {
                                       categories: names
                                     },
-                                    labels: {
-                                        items: [{
-                                            html: 'Total fruit consumption',
-                                            style: {
-                                                left: '50px',
-                                                top: '18px',
-                                                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-                                            }
-                                        }]
-                                    },
                                     credits: {
                                       enabled: false
                                     },
@@ -890,11 +1075,11 @@
                                     },
 
                                     title: {
-                                        text: ''
+                                        text: 'Email List Growth'
                                     },
 
                                     subtitle: {
-                                        text: ''
+                                        text: 'Your Net Subscriber Growth By List'
                                     },
 
                                     xAxis: {
@@ -903,7 +1088,7 @@
 
                                     yAxis: {
                                         title: {
-                                            text: 'Users'
+                                            text: 'Subscribers'
                                         }
 
                                     },
@@ -962,7 +1147,7 @@
                     });
 
                     $scope.$watch('[dashboard.widgets[0].sizeX, [dashboard.widgets[0].sizeY, [dashboard.widgets[0].col, [dashboard.widgets[0].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                      if (newX !== oldX && $scope.chart0) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -979,7 +1164,7 @@
                     });
 
                     $scope.$watch('[dashboard.widgets[1].sizeX, [dashboard.widgets[1].sizeY, [dashboard.widgets[1].col, [dashboard.widgets[1].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                      if (newX !== oldX && $scope.chart1) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -996,7 +1181,7 @@
                     });
 
                     $scope.$watch('[dashboard.widgets[2].sizeX, [dashboard.widgets[2].sizeY, [dashboard.widgets[2].col, [dashboard.widgets[2].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                      if (newX !== oldX && $scope.chart2) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -1013,7 +1198,7 @@
                     });
 
                     $scope.$watch('[dashboard.widgets[3].sizeX, [dashboard.widgets[3].sizeY, [dashboard.widgets[3].col, [dashboard.widgets[3].row]]]]', function(newX, oldX) {
-                      if (newX !== oldX) {
+                      if (newX !== oldX && $scope.chart3) {
                         setTimeout(function() { 
                             vm.user.dash = $scope.dashboard;
                             vm.user.dflag = '1';
@@ -1076,6 +1261,40 @@
                                 console.log(error);
                             });
                             $scope.chart6();
+                        }, 2000);
+                      }
+                    });
+
+                    $scope.$watch('[dashboard.widgets[7].sizeX, [dashboard.widgets[7].sizeY, [dashboard.widgets[7].col, [dashboard.widgets[7].row]]]]', function(newX, oldX) {
+                      if (newX !== oldX && $scope.chart7) {
+                        setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                            $scope.chart7();
+                        }, 2000);
+                      }
+                    });
+
+                    $scope.$watch('[dashboard.widgets[8].sizeX, [dashboard.widgets[8].sizeY, [dashboard.widgets[8].col, [dashboard.widgets[8].row]]]]', function(newX, oldX) {
+                      if (newX !== oldX && $scope.chart8) {
+                        setTimeout(function() { 
+                            vm.user.dash = $scope.dashboard;
+                            vm.user.dflag = '1';
+                            UserService.Update(vm.user)
+                            .then(function () {
+                                console.log('User updated');
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                            $scope.chart8();
                         }, 2000);
                       }
                     });
@@ -1174,6 +1393,8 @@
                         scope.chart4();
                         scope.chart5();
                         scope.chart6();
+                        scope.chart7();
+                        scope.chart8();
                     }, 250);
 
                     scope.resizeWithOffset = function (offsetH) {

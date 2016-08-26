@@ -88,13 +88,13 @@
                           },
                           plotLines: [{
                             value: avgDataMC[0].avgOpenRate,
-                              color: Highcharts.getOptions().colors[0],
-                              dashStyle: 'shortdot',
-                              width: 2,
-                              zIndex: 10,
-                              label: {
-                                  text: 'Average Open Rate'
-                              }
+                            color: Highcharts.getOptions().colors[0],
+                            dashStyle: 'shortdot',
+                            width: 2,
+                            zIndex: 10,
+                            label: {
+                                text: 'Average Open Rate'
+                            }
                           }],
                           title: {
                             text: 'Open Rate',
@@ -124,7 +124,7 @@
                           labels: {
                             format: '{value}%',
                             style: {
-                              collor: Highcharts.getOptions().colors[1]
+                              color: Highcharts.getOptions().colors[1]
                             }
                           },
                           opposite: true,
@@ -541,7 +541,7 @@
                     });
 
                     thisMonth.then(function(results) {
-                        var data1 = results.rows.map(function(row) { return +row[2]/row[1]; });
+                        var data1 = results.rows.map(function(row) { return +row[2]*100/row[1]; });
                         var data2 = dataGA.map(function (row) { return +row.avgCR; });
                         var labels = dataGA.map(function (row) { return row._id; });
 

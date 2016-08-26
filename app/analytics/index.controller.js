@@ -316,6 +316,7 @@
                 activeUsers.set(data).execute();
 
                 // Render all the of charts for this view.
+                queryCommunityData(data.ids);
                 renderWeekOverWeekChart(data.ids);
                 renderYearOverYearChart(data.ids);
                 renderTopBrowsersChart(data.ids);
@@ -324,6 +325,35 @@
                 
               });
 
+              function queryCommunityData(ids) {
+                  var now = moment(); // .subtract(3, 'day');
+                  var dataGA = [];
+
+                  var thisWeek = query({
+                    'ids': ids,
+                    'dimensions': 'ga:day',
+                    'metrics': 'ga:sessions, ga:revenuePerTransaction, ga:transactionRevenue, ga:transactions, ga:costPerTransaction',
+                    'start-date': moment(now).subtract(1, 'months').startOf("month").format('YYYY-MM-DD'),
+                    'end-date': moment(now).subtract(1, 'months').endOf("month").format('YYYY-MM-DD')
+                  });
+
+                  thisWeek.then(function(result) {
+                      result.rows.forEach(function(row, i) {
+                          dataGA.push({
+                              day: i+1,
+                              sessions: row[1]*1,
+                              AOV: row[2]*1,
+                              CR: (row[4]/row[1])*100,
+                              revenue: row[3]*1,
+                              CPA: row[5]*1
+                          })
+                      });
+                      UserService.SetGACommunityData(result.profileInfo.profileId, dataGA).then(function (status) {
+                          console.log(status);
+                      });
+                  });
+
+              }
 
               /**
                * Draw the a chart.js line chart with data from the specified view that
