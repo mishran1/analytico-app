@@ -9,6 +9,14 @@
                 var vm = this;
                 vm.user = null;
 
+                $scope.signOut = function() {
+                    var logout;
+                    logout = window.open("https://accounts.google.com/logout");
+                    setTimeout(function() {
+                        logout.close();
+                    }, 500);
+                };
+
                 $window.location.href = '/app/#/';
                 if ($rootScope.flagH == '1') {
                     $rootScope.flagH = '0';
@@ -229,7 +237,6 @@
                                 renderYearOverYearChart(gaid);
                                 renderAOV(gaid);
                                 renderCR(gaid);
-                                render(gaid);
                             });
 
                             /**
@@ -303,7 +310,10 @@
                                 renderTopCountriesChart(data.ids);
                                 renderAOV(data.ids);
                                 renderCR(data.ids);
-                                render(data.ids);
+
+                                UserService.GetGACommunityData(data.ids).then(function (dataGA) {
+                                    console.log(dataGA);
+                                });
                             });
                             
 
@@ -409,7 +419,7 @@
                                         });
                                     };
                                 counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
                                 });
@@ -525,7 +535,7 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
 
@@ -604,7 +614,7 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
 
@@ -688,7 +698,7 @@
                                         });
                                     }
                                 counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
                                 });
@@ -786,7 +796,7 @@
                                         });
                                     };
                                 counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
                                 });
@@ -861,36 +871,7 @@
                                         });
                                     };
                                 counter++;
-                                if (counter == 7){
-                                   resolve();
-                                }
-                                });
-                            }
-
-                            /**
-                            * Draw the a chart.js line chart with data from the specified view that
-                            * overlays session data for the current week over session data for the
-                            * previous week.
-                            */
-                            function renderRevenue(ids) {
-
-                                // Adjust `now` to experiment with different days, for testing only...
-                                var now = moment(); // .subtract(3, 'day');
-
-                                var thisMonth = query({
-                                  'ids': ids,
-                                  'dimensions': 'ga:day',
-                                  'metrics': 'ga:transactionRevenue',
-                                  'start-date': moment(now).startOf("month").format('YYYY-MM-DD'),
-                                  'end-date': moment(now).format('YYYY-MM-DD')
-                                });
-
-                                thisMonth.then(function(results) {
-                                    var data = results.rows.map(function(row) { return +row[2]*100/row[1]; });
-                                    var labels = results.rows.map(function (row) { return row[0]; });
-                                    console.log(results);
-                                counter++;
-                                if (counter == 7){
+                                if (counter == 6){
                                    resolve();
                                 }
                                 });

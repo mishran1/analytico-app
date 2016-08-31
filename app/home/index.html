@@ -22,8 +22,15 @@
 <div class="page-header">
 	<a class="pull-right btn btn-primary" ng-click="addWidget()"><i class="glyphicon glyphicon-plus"></i> Add Widget</a>
 	<a class="pull-right btn btn-warning" ng-click="clear()"><i class="glyphicon glyphicon-trash"></i> Clear</a>
-	<h1 style="display: inline-block; width: 200px;">Dashboard</h1>
+	<h1>Dashboard</h1>
 	<div id="embed-api-auth-container"></div>
+
+	<!-- GA logout -->
+	<a target="signOutFrame" href="https://accounts.google.com/logout">Sign Out</a>
+
+	<!-- Hidden iFrame to access GA logout page -->
+	<iframe name="signOutFrame" class="hidden"></iframe>
+
 	<div id="view-selector-container" class="hidden"></div>
 	<div id="date-range-selector-container" class="hidden"></div>
 	<div id="view-name" class="hidden"></div>
