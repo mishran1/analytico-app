@@ -55,7 +55,7 @@
         }
 
         footer {
-          background-color: #f5f5f5;
+          opacity: 0;
         }
 
         footer > .container .text-muted {
@@ -70,25 +70,19 @@
         /* CUSTOMIZE THE NAVBAR
         -------------------------------------------------- */
 
-        /* Special class on .container surrounding .navbar, used for positioning it into place. */
-        .navbar-wrapper {
-          position: absolute;
-          top: 0;
-          right: 0;
-          left: 0;
-          z-index: 20;
-        }
 
         /* Flip around the padding for proper display in narrow viewports */
-        .navbar-wrapper > .container {
+        body > .container {
           padding-right: 0;
           padding-left: 0;
         }
-        .navbar-wrapper .navbar {
+        .navbar {
+          background: rgba(255,255,255,0);
+          border-color: rgba(255,255,255,0);
           padding-right: 15px;
           padding-left: 15px;
         }
-        .navbar-wrapper .navbar .container {
+        .navbar .container {
           width: auto;
         }
 

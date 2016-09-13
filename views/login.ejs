@@ -16,47 +16,46 @@
     </head>
 
     <body>
-        <div class="navbar-wrapper">
-            <div class="container">
-                <nav class="navbar navbar-fixed-top navbar-inverse navbar-static-top">
-                    <div class="container">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <div class="navbar-header">
-                            <a class="navbar-brand" href="/">Analytico</a>
-                        </div>
-                        <div id="navbar" class="navbar-collapse collapse pull-right">
-                            <ul class="nav navbar-nav">
-                                <!-- Other nav options 
-                                <li class="active"><a href="#">Home</a></li>
-                                <li><a href="#about">About</a></li>
-                                <li><a href="#contact">Contact</a></li>
-                                Other nav options -->
-                                <form class="navbar-form form-inline navbar-right" method="post">
-                                    <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input type="text" name="username" id="username" value="<%= locals.username || '' %>" class="form-control" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" name="password" id="password" class="form-control" />
-                                        <button type="submit" class="btn btn-primary">Login</button>
-                                    </div>
-                                    <div class="form-group">
-                                        <a href="/register" class="btn btn-link">Register</a>
-                                    </div>
-                                    <div class="form-group">
-                                        <a href="/paid-calculator" class="btn btn-link">Calculator</a>
-                                    </div>
-                                </form>
-                            </ul>
-                        </div>
+        <div class="container">
+            <nav class="navbar navbar-fixed-top navbar-inverse navbar-static-top">
+                <div class="container">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/">Analytico</a>
                     </div>
-                </nav>
+                    <div id="navbar" class="navbar-collapse collapse pull-right">
+                        <ul class="nav navbar-nav">
+                            <!-- Other nav options 
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#about">About</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                            Other nav options -->
+                            <form class="navbar-form form-inline navbar-right" method="post">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" name="username" id="username" value="<%= locals.username || '' %>" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" id="password" class="form-control" />
+                                    <button type="submit" class="btn btn-primary">Login</button>
+                                </div>
+                                <div class="form-group">
+                                    <a href="/register" class="btn btn-link" style="color: white">Register</a>
+                                </div>
+                                <div class="form-group">
+                                    <a href="/paid-calculator" class="btn btn-link" style="color: white">Calculator</a>
+                                </div>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
             <% if(locals.error) { %>
                 <div class="alert alert-danger alert-dismissable">
                   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -69,9 +68,7 @@
                   <%= success %>
                 </div>
             <% } %>
-            </div>
         </div>
-
         <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -207,4 +204,13 @@
     </div><!-- /.container -->
 
     </body>
+
+    <script>
+      // Handle appearance of navbar and footer
+      $(document).on('scroll', function (e) {
+        var scrollDistance = $(document).scrollTop() / 500;
+        $('.navbar').css('background', 'rgba(0,0,0,' + scrollDistance + ')');
+          $('.navbar-fixed-bottom').css('opacity', scrollDistance * .2);          
+      });
+    </script>
 </html>
